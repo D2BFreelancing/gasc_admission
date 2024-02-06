@@ -1,0 +1,194 @@
+<form action="/get_uid_details" method="post" id="uidSearchForm">
+  <input type="text" name="uid" id="uid">
+  <button type="submit">Search</button>
+</form>
+
+
+
+  
+  <form action="/transfer-submit" method="post" class="Form">
+    
+            <%if (typeof data !='undefined' ){%>
+              <%if (data=='no data') {%>
+                <br>
+
+                    <h2>User not Found</h2>
+             <% }%>
+          
+             <div class="rectangle-1">
+              <span class="transfer-admission">Transfer Admission</span>
+              <input type="date" id="date" class="rectangle-2">
+              <input type="text" id="UID" class="rectangle-3" placeholder="UID" name="uid" value="<%= data ? data.uid : '' %>">
+              <input type="text" id="s_name" class="rectangle-6" placeholder="Enter your name" name="s_name" value="<%= data ? data.s_name : '' %>">
+              <input type="text" id="oldcname" name="o_cname" value="<%= data ? data.cname : '' %>">
+              <div class="flex-row-c">
+                <div class="search-container">
+                  <input type="text" id="searchInput" placeholder="Search..." class="rectangle-3" name="cname" value="<%= data ? data.change : '' %>">
+                  <select id="mySelect" class="rectangle-4">
+                    <% if (typeof options !== 'undefined') { %>
+                      <% for (var i = 0; i < options.length; i++) { %>
+                        <option value="<%= options[i] %>"><%= options[i] %></option>
+                      <% } %>
+                    <% } %>
+                  </select>
+                </div>
+                <div id="selectedValue">
+                  <!-- Display selected value here -->
+                </div>
+              </div>
+              <input type="text" id="old_fees" class="rectangle-8" readonly value="<%= data ? data.fees : '' %>">
+              <input type="text" id="new_fees" class="rectangle-8" readonly>
+              <input type="text" name="balance" id="balance" placeholder="Balance">
+              <button type="submit" class="rectangle-9">Transfer</button>
+            </div>
+               
+          <%  }else{%>
+            <h2>Without data</h2>
+                <div class="rectangle-1">
+                  <span class="tranfer-admission">Transfer Admission</span>
+                  <input type="date" id="date" class="rectangle-2">
+                  <div class="flex-row-c">
+                    <input type="search" id="Course" class="rectangle-3" placeholder="Search Course">
+                    <select name="course" id="Course" class="rectangle-4">
+                        <option value="default">Select Course</option>
+                        <option value="B.Sc.IT">B.Sc.IT</option>
+                    </select>
+                  </div>
+                  <input type="text" id="token" name="token" class="rectangle-8" placeholder="Token" readonly>
+                  <input type="text" id="s_name" class="rectangle-6" placeholder="Enter your name" name="s_name" value="">
+                  <input type="text" id="fees" class="rectangle-8" readonly name="fees">
+                  <button type="submit" class="rectangle-9">Transfer</button>
+                </div>
+               <% } %>
+             
+        </form>
+
+        
+
+        <script>
+          window.onload = function() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+            var yyyy = today.getFullYear();
+        
+            today = yyyy + '-' + mm + '-' + dd;
+            document.getElementById('date').value = today;
+          };
+
+          document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+    const mySelect = document.getElementById('mySelect');
+    const feesInput = document.getElementById('new_fees');
+    const oldFeesInput = document.getElementById('old_fees');
+    const balanceInput = document.getElementById('balance');
+    const uidSearchForm = document.getElementById('uidSearchForm');
+    const uidInput = document.getElementById('uid');
+    let originalOptions = Array.from(mySelect.options).map(option => ({ text: option.text, value: option.value }));
+
+
+    async function updateTokenInput(collectionName) {
+        try {
+            const response = await fetch(`/get-collection-count?collectionName=${collectionName}`);
+            const data = await response.json();
+            const tokenNumber = data.count + 1;
+            tokenField.value = tokenNumber; // Update the token field with the fetched number
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+                const feesMapping = {
+                    'BA Tamil':11400, 'BA English':12400,'B Com':17400,'B Com CA':17400,'B Com PA':17400,'B Com BI':16400,'B Com BA':16400,'B Com IT':17400,'BBA':15400,'BSC Maths':12400,'BSC Physics':12400,'BSC CS':19400,'BSC IT':19400,'BSC CT':17400,'BCA':19400,'BSC IOT':17400,'BSC CS AIDS':17400,'BSC Physical Education':13400,'MA Tamil':12950,'MA English':12950,'M Com':12950,'MSC CS':12950,'MSC IT':12950,'MSC Physics':14950,'MSC Chemistry':15950,'MBA':28950,'PGDCA':6050,
+                };
+
+                const uidMiddleMapping = {
+                    'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
+                };
+
+
+    async function updateTokenInput(collectionName) {
+    try {
+        const response = await fetch(`/get-collection-count?collectionName=${collectionName}`);
+        const data = await response.json();
+        const tokenNumber = data.count + 1; 
+        const uid = generateUID(collectionName, tokenNumber);
+        document.getElementById('token').value = tokenNumber; 
+        alert(`UID: ${uid}`);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
+
+
+function generateUID(courseName, tokenNumber) {
+    const middlePart = uidMiddleMapping[courseName] || '';
+    return `${currentYearLastTwoDigits}-${middlePart}-${tokenNumber.toString().padStart(3, '0')}`;
+}
+
+
+function updateFees(optionValue) {
+        feesInput.value = feesMapping[optionValue] || 0;
+        updateTokenInput(optionValue); 
+    }
+            
+    function calculateAndDisplayBalance() {
+      const oldFees = parseFloat(oldFeesInput.value) || 0;
+      const newFees = parseFloat(feesInput.value) || 0;
+      const balance = newFees - oldFees;
+      balanceInput.value = balance.toFixed(2);
+    }
+
+    function updateFormFields(optionValue) {
+      const feesValue = feesMapping[optionValue] || 0;
+      feesInput.value = feesValue;
+      calculateAndDisplayBalance();
+    }
+    uidSearchForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+        const formattedUID = formatUID(uidInput.value);
+        uidInput.value = formattedUID; // Set the formatted UID back to the input
+        this.submit(); // Now submit the form with the formatted UID
+    });
+    function formatUID(inputValue) {
+        // Remove all non-alphanumeric characters and then insert dashes as needed
+        const cleanInput = inputValue.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        const match = cleanInput.match(/^(\d{2})([A-Z]{2})(\d{3})$/);
+        if (match) {
+            return `${match[1]}-${match[2]}-${match[3]}`; // Formats to "24-IT-001"
+        } else {
+            return inputValue; // Return the original input if it doesn't match the expected pattern
+        }
+    }
+    function filterOptions(searchValue) {
+      mySelect.innerHTML = '';
+      let filteredOptions = originalOptions.filter(option => option.text.toLowerCase().includes(searchValue.toLowerCase()));
+
+      filteredOptions.forEach(option => {
+        let newOption = new Option(option.text, option.value);
+        mySelect.add(newOption);
+      });
+
+      if (filteredOptions.length === 1) {
+        searchInput.value = filteredOptions[0].text;
+        updateFormFields(filteredOptions[0].text);
+      }
+    }
+
+    searchInput.addEventListener('input', function() {
+      filterOptions(searchInput.value);
+    });
+
+    mySelect.addEventListener('change', function() {
+  const selectedOptionText = mySelect.options[mySelect.selectedIndex].text;
+  // Update the searchInput value to the selected option's text
+  searchInput.value = selectedOptionText;
+  updateFormFields(selectedOptionText);
+});
+
+
+    filterOptions('');
+  });
+        </script>
+        

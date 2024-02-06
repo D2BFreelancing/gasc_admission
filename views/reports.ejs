@@ -1,0 +1,43 @@
+<h1>Report Details</h1>
+    <div>
+        <h2>Course Selection</h2>
+        <form action="/report_dept" method="post">
+          <h2>Course Selection</h2>
+          <select name="dept">
+              <% options.forEach(function(option) { %>
+                  <option value="<%= option %>"><%= option %></option>
+              <% }); %>
+          </select>
+          <button type="submit">Submit</button>
+      </form>
+      
+    </div>
+    <%  if(typeof data !='undefined'){%>
+        <% if (data!=null) { %>
+            <div>
+                <h2>Report Summary</h2>
+                <p>Number of Entries: <%= data.number_of_entries %></p>
+                <p>Number of Entries in Department: <%= data.number_of_entries_in_dept %></p>
+            </div>
+            <div>
+                <h2>Details of Entries in Department</h2>
+                <ul>
+                    <% data.in_department_entries.forEach(function(entry) { %>
+                        <li>UID: <%= entry.uid %>, Token: <%= entry.token %></li>
+                    <% }); %>
+                </ul>
+            </div>
+            <div>
+                <h2>All Entries</h2>
+                <ul>
+                    <% data.totalData.forEach(function(entry) { %>
+                        <li>UID: <%= entry.uid %>, Token: <%= entry.token %>, In Department: <%= entry.in_dept %></li>
+                    <% }); %>
+                </ul>
+            </div>
+        <% } else{%>
+            <h2>User Not Found</h2>
+   <% } }else{%>
+        Your Search List Here
+  <% }%>
+   
