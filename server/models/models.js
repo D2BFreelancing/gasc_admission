@@ -32,6 +32,9 @@ const dept_schema = new Schema({
     },
     balance:{
         typeof:Number,
+    },
+    cancel:{
+        type:Boolean,
     }
 });
 const ba_tamil = mongoose.model('ba_tamil',dept_schema);
