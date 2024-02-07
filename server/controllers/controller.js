@@ -73,7 +73,8 @@ async function saveDocument (newDocument){
             uid:uid,
             fees: req.body.fees,
             in_dept:true,
-            balance:req.body.balance
+            balance:req.body.balance,
+            cancel:false
         });
       
         await saveDocument(newDocument)
@@ -173,7 +174,8 @@ exports.transfer_admission = async (req, res) => {
             s_name: req.body.s_name,
             uid: req.body.uid,
             fees: req.body.fees,
-            in_dept:true
+            in_dept:true,
+            cancel:false
         });
         await saveDocument(newDocument)
 
@@ -249,8 +251,8 @@ exports.searchAndDateFind = async (req, res) => {
     }
 }
 
- //--------------------------------------cancel UID---------------------------------------
- exports.cancel_uid = async(req,res)=>{
+  //--------------------------------------cancel UID---------------------------------------
+exports.cancel_uid = async(req,res)=>{
     const fetch=req.body.uid;
     //const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
     var found=false;
@@ -261,7 +263,7 @@ for(var dept of models){
         break;
     }
     else{
-   var data= await dept_model.findOne({uid:fetch,in_dept:true});
+   var data= await dept_model.findOne({uid:fetch,in_dept:true,cancel:false});
    console.log(data);
   
    if (data!==null) {
@@ -285,7 +287,7 @@ exports.update_uid = async (req,res)=>{
         console.log(deptname);
         dept_model=mongoose.model(deptname);
    
- const data= await  dept_model.findOneAndUpdate({uid:uidToUpdate},{$set:{in_dept:false}});
+ const data= await  dept_model.findOneAndUpdate({uid:uidToUpdate},{$set:{in_dept:false,cancel:true}});
  console.log(data);
  res.redirect('/cancel');
 

@@ -1,4 +1,4 @@
-<form action="/cancel_uid_details" method="post" id="uidSearchForm">
+<form action="/cancel_uid_details" method="post">
     <input type="text" name="uid" id="uid">
     <button type="submit">Search</button>
 </form><br><br>
@@ -34,26 +34,3 @@
 
 
 
-<script>
-   document.addEventListener('DOMContentLoaded', function() {
-            
-    const uidSearchForm = document.getElementById('uidSearchForm');
-    const uidInput = document.getElementById('uid');
-    uidSearchForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
-        const formattedUID = formatUID(uidInput.value);
-        uidInput.value = formattedUID; // Set the formatted UID back to the input
-        this.submit(); // Now submit the form with the formatted UID
-    });
-    function formatUID(inputValue) {
-        // Remove all non-alphanumeric characters and then insert dashes as needed
-        const cleanInput = inputValue.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-        const match = cleanInput.match(/^(\d{2})([A-Z]{2})(\d{3})$/);
-        if (match) {
-            return `${match[1]}-${match[2]}-${match[3]}`; // Formats to "24-IT-001"
-        } else {
-            return inputValue; // Return the original input if it doesn't match the expected pattern
-        }
-    }
-  });
-</script>
