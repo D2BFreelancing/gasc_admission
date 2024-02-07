@@ -1,19 +1,40 @@
-<h1>Report Details</h1>
-    <div>
-        <h2>Course Selection</h2>
-        <form action="/report_dept" method="post">
-          <h2>Course Selection</h2>
-          <select name="dept">
-              <% options.forEach(function(option) { %>
-                  <option value="<%= option %>"><%= option %></option>
-              <% }); %>
-          </select>
-          <button type="submit">Submit</button>
-      </form>
-      
-    </div>
-    <%  if(typeof data !='undefined'){%>
-        <% if (data!=null) { %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Details</title>
+</head>
+<body>
+    <h1>Report Details</h1>
+    
+    <% if (typeof options !== 'undefined' && options.length > 0) { %>
+        <div>
+            <h2>Course Selection</h2>
+            <form action="/report_dept" method="post">
+                <h2>Course Selection</h2>
+                <select name="dept">
+                    <% options.forEach(function(option) { %>
+                        <option value="<%= option %>"><%= option %></option>
+                    <% }); %>
+                </select>
+            <button type="submit">search</button>
+        </div>
+
+    <br><br>
+
+    <!-- <form action="/date_find" method="post"> -->
+        <input type="date" name="date" id="date">
+        <button type="submit">Search</button>
+    </form>
+    <% } %>
+
+    <% if (typeof data !== 'undefined') { %>
+        <% if (data.totalData === "No data available for selected course") { %>
+            <div>
+                <h2><%= data.totalData %></h2>
+            </div>
+        <% } else { %>
             <div>
                 <h2>Report Summary</h2>
                 <p>Number of Entries: <%= data.number_of_entries %></p>
@@ -35,9 +56,37 @@
                     <% }); %>
                 </ul>
             </div>
-        <% } else{%>
-            <h2>User Not Found</h2>
-   <% } }else{%>
-        Your Search List Here
-  <% }%>
-   
+        <% } %>
+    <% } %>
+
+    <div class="date"> 
+        <% if (typeof fulldata !== 'undefined') { %>
+            <% if (fulldata === 'no data') { %>
+                <br>
+                <h2>User not Found</h2>
+            <% } else { %>
+                <h1><%=date ?date  :"no date" %></h1>
+                <p>Number of Entries: <%= fulldata.length %></p>
+                <table border="2" style="border-collapse: collapse;">
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>User Id</th>
+                        <th>Options</th>
+                    </tr>
+                    <% fulldata.forEach(item => { %>
+                        <tr>
+                            <td><%= item.s_name ? item.s_name : "no name" %></td>
+                            <td><%= item.cname ? item.cname : "no name" %></td>
+                            <td><%= item.uid ? item.uid : "no name" %></td>
+                            <td><button><a href="#">view</a></button></td>
+                        </tr>
+                    <% }); %>
+                </table>
+            <% } %>
+        <% } else { %>
+            <h2>Without data</h2>
+        <% } %>
+    </div>
+</body>
+</html>

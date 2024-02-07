@@ -187,48 +187,66 @@ exports.transfer_admission = async (req, res) => {
 };
 
 
-const transformInputToCollectionName = (input) => {
-    return input.toLowerCase().replace(/\s+/g, '_');
-};
 
+exports.searchAndDateFind = async (req, res) => {
+    try {
+        
+       const transformInputToCollectionName = (input) => {
+         return input.toLowerCase().replace(/\s+/g, '_');
+       }
+        const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+        const { dept, date } = req.body;
+        const collectionName = transformInputToCollectionName(dept);
 
-exports.report_search = async(req,res)=>{
+        let data = {
+            number_of_entries: 0,
+            number_of_entries_in_dept: 0,
+            in_department_entries: [],
+            totalData: []
+        };
 
-    const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
-    const {dept}=req.body
-    const collectionName = transformInputToCollectionName(dept);
+        // Search by department
+        if (collectionName && mongoose.connection.modelNames().includes(collectionName)) {
+            const Model = mongoose.model(collectionName);
+            const totalData = await Model.find({}, { uid: 1, in_dept: 1, token: 1 });
 
-    let data = {
-        number_of_entries: 0,
-        number_of_entries_in_dept: 0,
-        in_department_entries: [],
-        totalData: []
-    };
-    
-
-    if (mongoose.connection.modelNames().includes(collectionName)) {
-        const Model = mongoose.model(collectionName);
-        const totalData = await Model.find({}, { uid: 1, in_dept: 1, token: 1 });
-
-        // Reintroducing the for loop method to find in_department_entries
-        let in_department_entries = [];
-        for (let i = 0; i < totalData.length; i++) {
-            if (totalData[i].in_dept === true) {
-                in_department_entries.push(totalData[i]);
+            let in_department_entries = [];
+            for (let i = 0; i < totalData.length; i++) {
+                if (totalData[i].in_dept === true) {
+                    in_department_entries.push(totalData[i]);
+                }
             }
+
+            data = {
+                number_of_entries: totalData.length,
+                number_of_entries_in_dept: in_department_entries.length,
+                in_department_entries: in_department_entries,
+                totalData: totalData
+            };
+        } else {
+            data.totalData = "No data available for selected course";
         }
 
-        data = {
-            number_of_entries: totalData.length,
-            number_of_entries_in_dept: in_department_entries.length,
-            in_department_entries: in_department_entries,
-            totalData: totalData
-        };
-    } else {
-        data.totalData = "No data available for selected course";
-    }
+        // Search by date
+        if (date) {
+            var specificDate = new Date(date);
+            var fulldata = [];
 
-    res.render("reports", { options, data });
+            const models = mongoose.modelNames();
+            for (const modelName of models) {
+                const Model = mongoose.model(modelName);
+                const modelData = await Model.find({ date: specificDate });
+                fulldata.push(...modelData);
+            }
+            data.fulldata = fulldata;
+            data.date = date;
+        }
+
+        res.render('reports', { options, data,fulldata,date});
+    } catch (error) {
+        console.error(error);
+        res.status(500);
+    }
 }
 
  //--------------------------------------cancel UID---------------------------------------
