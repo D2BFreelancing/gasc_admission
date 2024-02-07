@@ -250,12 +250,12 @@ for(var dept of models){
   
    if (data!==null) {
     found=true;
-    res.render('cancel',{data});
+    res.render('cancel_admission',{data});
      }
        }
    }
   if (!found) {
-    res.render('cancel',{data:'no data'});
+    res.render('cancel_admission',{data:'no data'});
     
   }
 }
@@ -271,6 +271,39 @@ exports.update_uid = async (req,res)=>{
    
  const data= await  dept_model.findOneAndUpdate({uid:uidToUpdate},{$set:{in_dept:false,cancel:true}});
  console.log(data);
- res.redirect('/cancel');
+ res.redirect('cancel');
+
+}
+
+
+exports.cancel_admission = async(req,res)=>{
+    res.render('cancel_admission');
+}
+
+exports.cancel_reports = async(req,res)=>{
+    res.render('cancel_reports');
+}
+
+exports.cancel_reports_date = async(req,res)=>{
+    res.render('date_cancel');
+}
+
+exports.cancel_reports_dept = async(req,res)=>{
+    res.render('cancel_reports_dept');
+}
+
+exports.date_cancel_reports = async(req,res)=>{
+    const date = req.body.date;
+    const fullDate = [];
+    if(date){
+        console.log(date);
+        const models = mongoose.modelNames();
+        for(const model of models){
+            const collection = mongoose.model(model);
+            const modelDate =await collection.find({date:date,cancel:true});
+            fullDate.push(...modelDate);
+        }
+    }
+    res.render('date_cancel',{fullDate})
 
 }
