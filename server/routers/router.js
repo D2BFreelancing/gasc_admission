@@ -22,6 +22,7 @@ router.get('/cancel_reports',controller.cancel_reports);
 router.get('/cancel_reports_date',controller.cancel_reports_date);
 router.get('/cancel_reports_dept',controller.cancel_reports_dept);
 router.post('/date_cancel_reports',controller.date_cancel_reports);
+router.post('/dept_cancel_reports',controller.dept_cancel_reports);
 
 // router.post('/date_find',controller.searchAndDateFind);
 
