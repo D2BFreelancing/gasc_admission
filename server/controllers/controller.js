@@ -5,7 +5,9 @@ const data = require('../database/database');
 const ba_tamil = require('../models/models');
 const setLimit = require('../models/models')
 
+const login_data=require('../models/login');
 const mongoose = require('mongoose');
+const { options } = require('../routers/router');
 const uidMiddleMapping = {
     'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
 };
@@ -39,14 +41,50 @@ const saveDocument = async (document) => {
         throw error; 
     }
 };
+exports.login=async(req,res)=>{
+    res.render('login',{layout:false})
+}
+exports.login_fill=async(req,res)=>{
+    const name=req.body.username;
+    const pass=req.body.password;
+    const user=await login_data.findOne({name});
+    if (!user) {
+     res.send('User not found');
+    }
+    if (name === 'admin') {
+        res.render('admin',{layout:false});
+        return;
+    }
+    if (user.pass === pass) {
+        res.render('home');
+    } else {
+     res.send('Invalid password');
+    }
+    
+}
+exports.sign_form=async(req,res)=>{
+    res.render('singup',{layout:false});
+}
+exports.signdata=async(req,res)=>{
+    const data={
+        name:req.body.username,
+        pass:req.body.password,
+        cpass:req.body.cpassword
+    }
+const insert=await login_data.insertMany([data]);
+console.log(insert);
+res.send('record inserted')
 
+}
  exports.home = async(req,res)=>{
     res.render('home');
  }
-
+   
  exports.new = async(req,res)=>{
    
     res.render('new-admission', { options: options });
+   const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+  res.render('new-admission', { options: options,uid:"nodata", });
  }
  exports.new2 = async(req,res)=>{
     var uid=req.params.id;
@@ -62,6 +100,13 @@ const saveDocument = async (document) => {
  
  exports.report = async(req,res)=>{
     res.render('reports',{options:options});
+ }
+ exports.courseadd=async(req,res)=>{
+    var name=req.body.course;
+    var st=req.body.short;
+    var fees=req.body.fees;
+    // options.push(name)
+    res.send({name,st,fees});
  }
 
  function getCurrentYearLastTwoDigits() {

@@ -48,6 +48,7 @@ const departmentSchema =new Schema({
     
 });
 
+
 const ba_tamil = mongoose.model('ba_tamil',dept_schema);
 const ba_english = mongoose.model('ba_english',dept_schema);
 const bsc_maths = mongoose.model('bsc_maths',dept_schema);
