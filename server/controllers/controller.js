@@ -305,12 +305,12 @@ for(var dept of models){
   
    if (data!==null) {
     found=true;
-    res.render('cancel',{data});
+    res.render('cancel_admission',{data});
      }
        }
    }
   if (!found) {
-    res.render('cancel',{data:'no data'});
+    res.render('cancel_admission',{data:'no data'});
     
   }
 }
@@ -326,6 +326,86 @@ exports.update_uid = async (req,res)=>{
    
  const data= await  dept_model.findOneAndUpdate({uid:uidToUpdate},{$set:{in_dept:false,cancel:true}});
  console.log(data);
- res.redirect('/cancel');
+ res.redirect('cancel');
 
+}
+
+
+exports.cancel_admission = async(req,res)=>{
+    res.render('cancel_admission');
+}
+
+exports.cancel_reports = async(req,res)=>{
+    res.render('cancel_reports');
+}
+
+exports.cancel_reports_date = async(req,res)=>{
+    res.render('date_cancel');
+}
+
+exports.cancel_reports_dept = async(req,res)=>{
+    const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+    res.render('dept_cancel',{options});
+}
+
+exports.date_cancel_reports = async(req,res)=>{
+    const date = req.body.date;
+    const fullDate = [];
+    if(date){
+        console.log(date);
+        const models = mongoose.modelNames();
+        for(const model of models){
+            const collection = mongoose.model(model);
+            const modelDate =await collection.find({date:date,cancel:true});
+            fullDate.push(...modelDate);
+        }
+
+        fullDate.date=date;
+
+    }
+    res.render('date_cancel',{fullDate,date})
+
+}
+exports.dept_cancel_reports = async (req,res)=>{
+    try {
+        const transformInputToCollectionName = (input) => {
+            return input.toLowerCase().replace(/\s+/g, '_');
+        }
+    
+        const formatDate = (date) => {
+            const d = new Date(date);
+            const day = ('0' + d.getDate()).slice(-2); // Add leading 0 if needed
+            const month = ('0' + (d.getMonth() + 1)).slice(-2); // Add leading 0 if needed, month is 0-indexed
+            const year = d.getFullYear();
+            return `${day}-${month}-${year}`;
+        }
+    
+        const options = ['Select Course', 'BA Tamil', 'BA English', 'B Com', 'B Com CA', 'B Com PA', 'B Com BI', 'B Com BA', 'B Com IT', 'BBA', 'BSC Maths', 'BSC Physics', 'BSC CS', 'BSC IT', 'BSC CT', 'BCA', 'BSC IOT', 'BSC CS AIDS', 'BSC Physical Education', 'MA Tamil', 'MA English', 'M Com', 'MSC CS', 'MSC IT', 'MSC Physics', 'MSC Chemistry', 'MBA', 'PGDCA', 'CA Foundation'];
+        const { dept } = req.body;
+        const collectionName = transformInputToCollectionName(dept);
+    
+        let data = [];
+        // Search by department
+        if (collectionName && mongoose.connection.modelNames().includes(collectionName)) {
+            const Model = mongoose.model(collectionName);
+            const totalData = await Model.find({ cancel: true });
+    
+            // Format each date and add cname to the modified object before pushing it into data
+            totalData.forEach(item => {
+                const formattedItem = {
+                    ...item._doc,
+                    date: formatDate(item.date),
+                    cname: dept // Here we are adding the dept name as cname to each item
+                };
+                data.push(formattedItem);
+            });
+        }
+        console.log(data);
+        res.render('dept_cancel', { options, data, dept }); // Pass dept to the template if needed
+    } catch (error) {
+        console.error(error);
+        res.status(500);
+    }
+    
+    
 }
