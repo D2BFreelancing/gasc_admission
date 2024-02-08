@@ -1,0 +1,6 @@
+<h2>Current Limit: <%= currentLimit %></h2>
+    <form action="/update_limit" method="POST">
+        <label for="newLimit">New Limit:</label>
+        <input type="number" id="newLimit" name="newLimit" required>
+        <button type="submit">Update Limit</button>
+    </form>
