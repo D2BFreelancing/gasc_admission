@@ -17,7 +17,7 @@ router.post('/form_submit',controller.dept);
 router.get('/get-collection-count', controller.getCollectionCount);
 router.post('/get_uid_details',controller.get_uid);
 router.post('/transfer-submit',controller.transfer_admission);
-// router.post('/report_id',controller.report_id)
+router.post('/add_course',controller.courseadd)
 router.post('/report_dept',controller.searchAndDateFind);
 router.post('/cancel_uid_details',controller.cancel_uid);
 router.get('/cancel_update/:dept/:uid',controller.update_uid);

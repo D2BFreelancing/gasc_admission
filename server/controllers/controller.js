@@ -5,6 +5,7 @@ const data = require('../database/database');
 const ba_tamil = require('../models/models');
 const login_data=require('../models/login');
 const mongoose = require('mongoose');
+const { options } = require('../routers/router');
 const uidMiddleMapping = {
     'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
 };
@@ -56,9 +57,7 @@ res.send('record inserted')
    
  exports.new = async(req,res)=>{
    const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
-   options.push("karthi");
-   console.log(options); 
-   res.render('new-admission', { options: options,uid:"nodata", });
+  res.render('new-admission', { options: options,uid:"nodata", });
  }
  exports.new2 = async(req,res)=>{
     var uid=req.params.id;
@@ -77,6 +76,13 @@ res.send('record inserted')
  exports.report = async(req,res)=>{
     const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
     res.render('reports',{options:options});
+ }
+ exports.courseadd=async(req,res)=>{
+    var name=req.body.course;
+    var st=req.body.short;
+    var fees=req.body.fees;
+    // options.push(name)
+    res.send({name,st,fees});
  }
 
  function getCurrentYearLastTwoDigits() {
