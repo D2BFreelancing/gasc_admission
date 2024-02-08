@@ -37,6 +37,15 @@ const dept_schema = new Schema({
         type:Boolean,
     }
 });
+
+
+
+exports.options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+
+for(i=0;i<this.options.length;i++){
+    // mongoose.model()
+}
+
 const ba_tamil = mongoose.model('ba_tamil',dept_schema);
 const ba_english = mongoose.model('ba_english',dept_schema);
 const bsc_maths = mongoose.model('bsc_maths',dept_schema);

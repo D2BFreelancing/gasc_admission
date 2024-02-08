@@ -1,7 +1,7 @@
-       <% if(typeof uid !='undefined') {%>
+       <!-- <% if(typeof uid !='undefined') {%>
 
           <p>Student Data Saved Successfully <br> Generated UID:<%= uid %></p>
-        <%}%>
+        <%}%> -->
         <form action="/form_submit" method="post" class="Form">
                 <div class="rectangle-1">
                   <span class="new-admission">New Admission</span>
@@ -26,7 +26,9 @@
                   <button type="submit" class="rectangle-9">Save & Generate</button>
                 </div>
         </form>
+
         <script>
+            
             document.addEventListener('DOMContentLoaded', function() {
                 const searchInput = document.getElementById('searchInput');
                 const mySelect = document.getElementById('mySelect');

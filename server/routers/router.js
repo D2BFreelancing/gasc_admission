@@ -3,7 +3,11 @@ const router = express.Router();
 
 const controller = require('../controllers/controller');
 
-router.get('/',controller.home);
+router.get('/',controller.login);
+router.post('/login',controller.login_fill)
+router.get('/sign_up',controller.sign_form)
+router.post('/signup_data',controller.signdata)
+router.get('/home',controller.home);
 router.get('/new-admission',controller.new);
 router.get('/new_student/:id',controller.new2);
 router.get('/transfer-admission',controller.transfer)
