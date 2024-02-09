@@ -7,7 +7,7 @@ const setLimit = require('../models/models')
 
 const login_data=require('../models/login');
 const mongoose = require('mongoose');
-const { options } = require('../routers/router');
+
 const uidMiddleMapping = {
     'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
 };
@@ -18,11 +18,10 @@ const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B 
         return setting.limit;
     }
 
-exports.admin = async (req,res)=>{
-    const setting = await setLimit.find();
-    console.log(setting);
-    res.render('admin', { currentLimit: setting.limit });
-}
+// exports.admin = async (req,res)=>{
+    
+//     res.render('admin', {  });
+// }
 exports.update_limit = async (req,res)=>{
     const newLimit = req.body.newLimit;
     if (newLimit && !isNaN(newLimit)) {
@@ -52,7 +51,9 @@ exports.login_fill=async(req,res)=>{
      res.send('User not found');
     }
     if (name === 'admin') {
-        res.render('admin',{layout:false});
+        const setting = await setLimit.find();
+        console.log(setting);
+        res.render('admin',{layout:false,setting});
         return;
     }
     if (user.pass === pass) {
@@ -73,8 +74,7 @@ exports.signdata=async(req,res)=>{
     }
 const insert=await login_data.insertMany([data]);
 console.log(insert);
-res.send('record inserted')
-
+res.render('login')
 }
  exports.home = async(req,res)=>{
     res.render('home');
@@ -82,7 +82,7 @@ res.send('record inserted')
    
  exports.new = async(req,res)=>{
    
-    res.render('new-admission', { options: options });
+  
    const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
   res.render('new-admission', { options: options,uid:"nodata", });
  }
@@ -360,7 +360,7 @@ exports.update_uid = async (req,res)=>{
    
  const data= await  dept_model.findOneAndUpdate({uid:uidToUpdate},{$set:{in_dept:false,cancel:true}});
  console.log(data);
- res.redirect('cancel');
+ res.render('cancel_admission');
 
 }
 
