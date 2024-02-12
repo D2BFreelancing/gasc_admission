@@ -74,3 +74,4 @@ const ca_foundation = mongoose.model('ca_foundation',dept_schema);
 
 const name="ba_tamil";
 const model=mongoose.model(name);
+module.exports=dept_schema;

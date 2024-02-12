@@ -9,8 +9,11 @@ const { options } = require('../routers/router');
 const uidMiddleMapping = {
     'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
 };
+const option_val=['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
 
-
+const feesMapping = {
+    'BA Tamil':11400, 'BA English':12400,'B Com':17400,'B Com CA':17400,'B Com PA':17400,'B Com BI':16400,'B Com BA':16400,'B Com IT':17400,'BBA':15400,'BSC Maths':12400,'BSC Physics':12400,'BSC CS':19400,'BSC IT':19400,'BSC CT':17400,'BCA':19400,'BSC IOT':17400,'BSC CS AIDS':17400,'BSC Physical Education':13400,'MA Tamil':12950,'MA English':12950,'M Com':12950,'MSC CS':12950,'MSC IT':12950,'MSC Physics':14950,'MSC Chemistry':15950,'MBA':28950,'PGDCA':6050,
+};
 async function saveDocument (newDocument){
     
     newDocument.save();
@@ -56,17 +59,17 @@ res.send('record inserted')
  }
    
  exports.new = async(req,res)=>{
-   const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
-  res.render('new-admission', { options: options,uid:"nodata", });
+//    const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+  res.render('new-admission', { options: option_val,uid:"nodata", });
  }
  exports.new2 = async(req,res)=>{
     var uid=req.params.id;
-    const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
-     res.render('new-admission', { options: options,uid});
+    // const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+     res.render('new-admission', { options: option_val,uid});
   }
  exports.transfer = async(req,res)=>{
-    const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
-    res.render('transfer-admission',{data:null,options:options});
+    // const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+    res.render('transfer-admission',{data:null,options:option_val});
  }
 
  exports.cancel = async(req,res)=>{
@@ -74,15 +77,37 @@ res.send('record inserted')
  }
  
  exports.report = async(req,res)=>{
-    const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
-    res.render('reports',{options:options});
+    // const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+    res.render('reports',{options:option_val});
  }
  exports.courseadd=async(req,res)=>{
     var name=req.body.course;
     var st=req.body.short;
     var fees=req.body.fees;
-    // options.push(name)
-    res.send({name,st,fees});
+    option_val.push(name);
+    uidMiddleMapping[name] = st;
+    feesMapping[name]=fees;
+  console.log(uidMiddleMapping);
+  const collectionName = name.toLowerCase().replace(/\s+/g, '_');
+  console.log(feesMapping);
+  const CourseModel = mongoose.model(collectionName,ba_tamil);
+  // Assuming you have an array of courses with their corresponding fees
+const courses = [
+    { name: 'BA Tamil', fee: 11400 },
+    { name: 'BA English', fee: 12400 },
+    // Add more courses here
+];
+
+// Create the feesMapping object
+const feesMapping = {};
+courses.forEach(course => {
+    feesMapping[course.name] = course.fee;
+});
+
+// Now you can use the feesMapping object in your controller logic
+// For example, if you want to send it to your EJS template
+// res.render('your_template', { feesMapping: feesMapping });
+  res.render('new-admission', { feesMapping: feesMapping });
  }
 
  function getCurrentYearLastTwoDigits() {
@@ -150,7 +175,7 @@ async function sound(col) {
 
 exports.get_uid = async(req,res)=>{
     const fetch=req.body.uid;
-    const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+    // const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
     var found=false;
    const models=mongoose.modelNames();
 for(var dept of models){
@@ -163,13 +188,17 @@ for(var dept of models){
    console.log(data);
   
    if (data!==null) {
+    console.log(option_val);
     found=true;
-    res.render('transfer-admission',{data,options});
+    res.render('transfer-admission',{data,options:option_val});
      }
        }
    }
+  
+
   if (!found) {
-    res.render('transfer-admission',{data:'no data',options});
+    
+    res.render('transfer-admission',{data:'no data',options:option_val});
     
   }
    
@@ -209,19 +238,20 @@ exports.transfer_admission = async (req, res) => {
     try {
         // await transferStudent(uid, sourceCourse, destCourse);
         await sourceCourse.updateOne({"uid":uid,"in_dept":true},{$set:{"in_dept":false}})
-
+        const fees = req.body.new_fees; // Assuming default fees is 0
+        const date = req.body.date;
         const newDocument = new model({
-            date: req.body.date,
+            date: date,
             cname: req.body.cname,
             token: req.body.token,
             s_name: req.body.s_name,
             uid: req.body.uid,
-            fees: req.body.fees,
+            fees:fees,
             in_dept:true,
             cancel:false
         });
         await saveDocument(newDocument)
-
+        console.log(newDocument);
         sound(collectionName);
 
         res.redirect('/transfer-admission');
@@ -239,7 +269,7 @@ exports.searchAndDateFind = async (req, res) => {
        const transformInputToCollectionName = (input) => {
          return input.toLowerCase().replace(/\s+/g, '_');
        }
-        const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+        // const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
         const { dept, date } = req.body;
         const collectionName = transformInputToCollectionName(dept);
 
@@ -287,7 +317,7 @@ exports.searchAndDateFind = async (req, res) => {
             data.date = date;
         }
 
-        res.render('reports', { options, data,fulldata,date});
+        res.render('reports', {options:option_val, data,fulldata,date});
     } catch (error) {
         console.error(error);
         res.status(500);
@@ -332,7 +362,7 @@ exports.update_uid = async (req,res)=>{
    
  const data= await  dept_model.findOneAndUpdate({uid:uidToUpdate},{$set:{in_dept:false,cancel:true}});
  console.log(data);
- res.redirect('cancel');
+ res.render('cancel');
 
 }
 
@@ -350,8 +380,8 @@ exports.cancel_reports_date = async(req,res)=>{
 }
 
 exports.cancel_reports_dept = async(req,res)=>{
-    const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
-    res.render('dept_cancel',{options});
+    // const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+    res.render('dept_cancel',{options:option_val});
 }
 
 exports.date_cancel_reports = async(req,res)=>{
@@ -386,7 +416,7 @@ exports.dept_cancel_reports = async (req,res)=>{
             return `${day}-${month}-${year}`;
         }
     
-        const options = ['Select Course', 'BA Tamil', 'BA English', 'B Com', 'B Com CA', 'B Com PA', 'B Com BI', 'B Com BA', 'B Com IT', 'BBA', 'BSC Maths', 'BSC Physics', 'BSC CS', 'BSC IT', 'BSC CT', 'BCA', 'BSC IOT', 'BSC CS AIDS', 'BSC Physical Education', 'MA Tamil', 'MA English', 'M Com', 'MSC CS', 'MSC IT', 'MSC Physics', 'MSC Chemistry', 'MBA', 'PGDCA', 'CA Foundation'];
+        // const options = ['Select Course', 'BA Tamil', 'BA English', 'B Com', 'B Com CA', 'B Com PA', 'B Com BI', 'B Com BA', 'B Com IT', 'BBA', 'BSC Maths', 'BSC Physics', 'BSC CS', 'BSC IT', 'BSC CT', 'BCA', 'BSC IOT', 'BSC CS AIDS', 'BSC Physical Education', 'MA Tamil', 'MA English', 'M Com', 'MSC CS', 'MSC IT', 'MSC Physics', 'MSC Chemistry', 'MBA', 'PGDCA', 'CA Foundation'];
         const { dept } = req.body;
         const collectionName = transformInputToCollectionName(dept);
     
@@ -407,7 +437,7 @@ exports.dept_cancel_reports = async (req,res)=>{
             });
         }
         console.log(data);
-        res.render('dept_cancel', { options, data, dept }); // Pass dept to the template if needed
+        res.render('dept_cancel', {options:option_val, data, dept }); // Pass dept to the template if needed
     } catch (error) {
         console.error(error);
         res.status(500);

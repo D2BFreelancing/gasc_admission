@@ -40,10 +40,11 @@
                 updateDate.value = formattedDate;
                 // const currentYearLastTwoDigits = getCurrentYearLastTwoDigits();
 
-                const feesMapping = {
-                    'BA Tamil':11400, 'BA English':12400,'B Com':17400,'B Com CA':17400,'B Com PA':17400,'B Com BI':16400,'B Com BA':16400,'B Com IT':17400,'BBA':15400,'BSC Maths':12400,'BSC Physics':12400,'BSC CS':19400,'BSC IT':19400,'BSC CT':17400,'BCA':19400,'BSC IOT':17400,'BSC CS AIDS':17400,'BSC Physical Education':13400,'MA Tamil':12950,'MA English':12950,'M Com':12950,'MSC CS':12950,'MSC IT':12950,'MSC Physics':14950,'MSC Chemistry':15950,'MBA':28950,'PGDCA':6050,
-                };
-
+                // const feesMapping = {
+                  //  'BA Tamil':11400, 'BA English':12400,'B Com':17400,'B Com CA':17400,'B Com PA':17400,'B Com BI':16400,'B Com BA':16400,'B Com IT':17400,'BBA':15400,'BSC Maths':12400,'BSC Physics':12400,'BSC CS':19400,'BSC IT':19400,'BSC CT':17400,'BCA':19400,'BSC IOT':17400,'BSC CS AIDS':17400,'BSC Physical Education':13400,'MA Tamil':12950,'MA English':12950,'M Com':12950,'MSC CS':12950,'MSC IT':12950,'MSC Physics':14950,'MSC Chemistry':15950,'MBA':28950,'PGDCA':6050,
+                //};  
+      
+        
                 const uidMiddleMapping = {
                     'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
                 };
@@ -72,11 +73,18 @@
 //     const middlePart = uidMiddleMapping[courseName] || '';
 //     return `${currentYearLastTwoDigits}-${middlePart}-${tokenNumber.toString().padStart(3, '0')}`;
 // }
-
-
-                function updateFees(optionValue) {
-                    feesInput.value = feesMapping[optionValue] || 0;
-                }
+document.addEventListener('DOMContentLoaded', function() {
+    const feesMappingElement = document.getElementById('feesMapping');
+    const feesMapping = '<%= JSON.stringify(feesMapping) %>';
+    
+    // Output the feesMapping object as JSON
+    feesMappingElement.textContent = JSON.stringify(feesMapping, null, 2);
+});
+if (typeof feesMapping !== 'undefined') {
+    function updateFees(optionValue) {
+        feesInput.value = feesMapping[optionValue] || 0;
+    }
+}
             
                 function filterOptions(searchValue) {
                     mySelect.innerHTML = '';
