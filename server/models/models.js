@@ -38,6 +38,15 @@ const dept_schema = new Schema({
     }
 });
 
+const limitSchema = new Schema({
+    limit:{
+        typeof:Number
+    }
+});
+
+const departmentSchema =new Schema({
+    
+});
 
 
 const ba_tamil = mongoose.model('ba_tamil',dept_schema);
@@ -71,7 +80,12 @@ const mba = mongoose.model('mba',dept_schema);
 const pgdca = mongoose.model('pgdca',dept_schema);
 const ca_foundation = mongoose.model('ca_foundation',dept_schema);
 
+const setLimit = mongoose.model('limit',limitSchema);
 
 const name="ba_tamil";
 const model=mongoose.model(name);
+<<<<<<< HEAD
 module.exports=dept_schema;
+=======
+module.exports=setLimit;
+>>>>>>> 58f529eda057a28967a020a4e770ea5f22c4f5e6

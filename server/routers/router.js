@@ -30,4 +30,9 @@ router.post('/dept_cancel_reports',controller.dept_cancel_reports);
 
 // router.post('/date_find',controller.searchAndDateFind);
 
+// admin router
+// router.get('/admin',controller.admin)
+router.post('/update_limit',controller.update_limit)
+
+
 module.exports = router;

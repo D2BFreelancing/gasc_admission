@@ -3,9 +3,11 @@ const bp = require('body-parser');
 const app = express();
 const data = require('../database/database');
 const ba_tamil = require('../models/models');
+const setLimit = require('../models/models')
+
 const login_data=require('../models/login');
 const mongoose = require('mongoose');
-const { options } = require('../routers/router');
+
 const uidMiddleMapping = {
     'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
 };
@@ -16,9 +18,26 @@ const feesMapping = {
 };
 async function saveDocument (newDocument){
     
-    newDocument.save();
-
+//     res.render('admin', {  });
+// }
+exports.update_limit = async (req,res)=>{
+    const newLimit = req.body.newLimit;
+    if (newLimit && !isNaN(newLimit)) {
+        await setLimit.findOneAndUpdate({},{limit:newLimit});
+        res.render('home');
+    } else {
+        res.status(400).send("Invalid limit provided.");
+    }
 }
+const saveDocument = async (document) => {
+    try {
+        await document.save();
+        console.log('Document saved successfully.');
+    } catch (error) {
+        console.error('Error saving document:', error);
+        throw error; 
+    }
+};
 exports.login=async(req,res)=>{
     res.render('login',{layout:false})
 }
@@ -30,7 +49,9 @@ exports.login_fill=async(req,res)=>{
      res.send('User not found');
     }
     if (name === 'admin') {
-        res.render('admin',{layout:false});
+        const setting = await setLimit.find();
+        console.log(setting);
+        res.render('admin',{layout:false,setting});
         return;
     }
     if (user.pass === pass) {
@@ -51,8 +72,7 @@ exports.signdata=async(req,res)=>{
     }
 const insert=await login_data.insertMany([data]);
 console.log(insert);
-res.send('record inserted')
-
+res.render('login')
 }
  exports.home = async(req,res)=>{
     res.render('home');
@@ -115,7 +135,7 @@ courses.forEach(course => {
     return currentDate.getFullYear().toString().slice(-2);
 }
 
- exports.dept = async (req, res) => {
+exports.dept = async (req, res) => {
     const transformInputToCollectionName = (input) => {
         return input.toLowerCase().replace(/\s+/g, '_');
     };
@@ -123,17 +143,23 @@ courses.forEach(course => {
     const searchName = req.body.cname;
     const collectionName = transformInputToCollectionName(searchName);
 
-    const existingModels = mongoose.connection.modelNames();
-    let model=mongoose.model(collectionName);
-    var total= await model.countDocuments();
-      total+=1;
-    const middlePart = uidMiddleMapping[searchName];
-   var uid =`${currentYearLastTwoDigits}-${middlePart}-${total.toString().padStart(3, '0')}`;
- 
+    // Dynamically access or define a collection based on the collectionName
+    const CollectionModel = mongoose.models[collectionName] || mongoose.model(collectionName, new mongoose.Schema({ any: mongoose.Schema.Types.Mixed }, { strict: false }));
+
     try {
+        // Check the current count of documents in the collection
+        const currentDocumentCount = await CollectionModel.countDocuments();
+        if (currentDocumentCount >= MAX_DOCUMENTS_PER_COLLECTION()) {
+            // If the limit is reached, prevent adding a new document and inform the user
+            return res.status(400).send(`The limit of ${MAX_DOCUMENTS_PER_COLLECTION()} documents has been reached for the ${searchName} collection.`);
+        }
 
+        var total = currentDocumentCount + 1;
+        const middlePart = uidMiddleMapping[searchName];
+        var uid = `${currentYearLastTwoDigits}-${middlePart}-${total.toString().padStart(3, '0')}`;
 
-        const newDocument = new model({
+        // Assuming you have the rest of your document fields ready to be saved
+        const newDocumentData = {
             date: req.body.date,
             cname: req.body.cname,
             token: total,
@@ -143,11 +169,11 @@ courses.forEach(course => {
             in_dept:true,
             balance:req.body.balance,
             cancel:false
-        });
-      
-        await saveDocument(newDocument)
-        sound(collectionName);
-        //res.render('new-admission', { message: 'Admission successful with UID: ' + savedDocument.uid });
+        };
+        const newDocument = new CollectionModel(newDocumentData);
+
+        await saveDocument(newDocument);
+        // After successful insertion, you can redirect or respond as needed
         res.redirect(`/new_student/${uid}`);
     } catch (error) {
         console.error(error);
@@ -314,6 +340,7 @@ exports.searchAndDateFind = async (req, res) => {
                 fulldata.push(...modelData);
             }
             data.fulldata = fulldata;
+            console.log(fulldata);
             data.date = date;
         }
 
@@ -327,7 +354,6 @@ exports.searchAndDateFind = async (req, res) => {
   //--------------------------------------cancel UID---------------------------------------
 exports.cancel_uid = async(req,res)=>{
     const fetch=req.body.uid;
-    //const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
     var found=false;
    const models=mongoose.modelNames();
 for(var dept of models){
@@ -362,7 +388,7 @@ exports.update_uid = async (req,res)=>{
    
  const data= await  dept_model.findOneAndUpdate({uid:uidToUpdate},{$set:{in_dept:false,cancel:true}});
  console.log(data);
- res.render('cancel');
+ res.render('cancel_admission');
 
 }
 
@@ -397,6 +423,7 @@ exports.date_cancel_reports = async(req,res)=>{
         }
 
         fullDate.date=date;
+        console.log(fullDate);
 
     }
     res.render('date_cancel',{fullDate,date})
