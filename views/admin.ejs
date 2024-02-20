@@ -1,12 +1,4 @@
-<% if (Array.isArray(setting) && setting.length > 0) { %>
 
-        <% setting.forEach(function(item) { %>
-            <h2> Limit: <%= item.limit %></h2>
-        <% }); %>
-
-<% } else { %>
-    <p>No settings found.</p>
-<% } %>
 <form action="/update_limit" method="POST">
     <label for="newLimit">New Limit:</label>
     <input type="number" id="newLimit" name="newLimit" required >
@@ -15,12 +7,15 @@
     
 <h1>Admin page</h1>
 <form action="/add_course" method="post">
-    <label for="course">Add New course:</label>
-    <input type="text" name="course" id="course">
-    <label for="course">Short cut:</label>
-    <input type="text" name="short" id="course">
-    <label for="course">fees</label>
-    <input type="text" name="fees" id="course">
-    <input type="submit" value="submit">
+    <label for="course">Course Title:</label>
+    <input type="text" name="course" id="courseTitle" required>
+
+    <label for="fees">Fees:</label>
+    <input type="text" name="fees" id="fees" required>
+
+    <label for="key">Course Key:</label>
+    <input type="text" name="key" id="key" required>
+
+    <input type="submit" value="Submit">
 </form>
-<a href="/sign_up">Add new user</a>
+<a href="/sign_up">Add New User</a>

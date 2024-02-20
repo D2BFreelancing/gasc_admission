@@ -1,0 +1,25 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: linear-gradient(25deg, #f3ffe0 50%, #adffcf 50%);
+    height: 100vh;
+}
+
+.main{
+    background-color: blue;
+    display: flex;
+}
+
+.dept_search{
+    background-color: rgb(178, 178, 211);
+}
+
+.date_search{
+    background-color: green;
+}
+
+

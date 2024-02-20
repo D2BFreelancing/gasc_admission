@@ -1,110 +1,157 @@
-       <!-- <% if(typeof uid !='undefined') {%>
-
-          <p>Student Data Saved Successfully <br> Generated UID:<%= uid %></p>
-        <%}%> -->
+<link rel="stylesheet" href="/css/new_add.css">
+      
         <form action="/form_submit" method="post" class="Form">
-                <div class="rectangle-1">
-                  <span class="new-admission">New Admission</span>
-                  <input type="date" id="date" name="date"class="rectangle-2">
-                  <input type="text" name="s_name" class="rectangle-6" placeholder="Enter your name">
+            <h2 class="new-admission">New Admission</h2>
+                <div class="form_container">
+                  <div class="form_div">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" name="date"class="rectangle-2">
+                  </div>
+                  <div class="form_div">
+                    <label for="std">Student Name</label>
+                    <input type="text" name="s_name" id="std" class="rectangle-6" placeholder="&nbsp;&nbsp;&nbsp;Enter student name" required>
+                  </div>
+                  <div class="form_div">
                   <div class="flex-row-c">
-                    <div class="search-container">
-                      <input type="text" id="searchInput" placeholder="Search..." class="rectangle-3" name="cname">
-                      <select id="mySelect" class="rectangle-4">
-                        <% for(var i=0; i < options.length; i++) { %>
-                            <option value="<%= options[i] %>" ><%= options[i] %></option>
-                        <% } %>
-                    </select>
+                        <div class="search-container">
+                          <label for="searchInput">Course</label>
+                          <input type="text" id="searchInput" placeholder="&nbsp;&nbsp;&nbsp;Search..." class="rectangle-3" name="cname" required>
+                          <select id="mySelect" class="rectangle-4" onchange="updateFees(this.value)">
+                            <% if (fitchdata && fitchdata.length > 0) { %>
+                              <% for(var i=0; i < fitchdata.length; i++) { %>
+                                <option value="<%= fitchdata[i].key %>"><%= fitchdata[i].title %></option>
+                              <% } %>
+                            <% } else { %>
+                              <option>No data available</option>
+                            <% } %>
+                          </select>
+                      <div id="selectedValue">
+                          <!-- Display selected value here -->
+                      </div>
+                      </div>
                   </div>
-                  <div id="selectedValue">
-                      <!-- Display selected value here -->
+                
                   </div>
+                  <div class="form_div">
+                    <label for="feeses">Fees</label>
+                    <input type="number" id="fees" name="fees" class="rectangle-6" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;Fees" readonly>
                   </div>
-                  <input type="number" id="fees" name="fees" class="rectangle-6" placeholder="Fees" readonly>
-                  <!-- <input type="hidden" id="uid" name="uid">
-                  <input type="text" id="token" name="token" class="rectangle-8" placeholder="Token" readonly> -->
-                  <button type="submit" class="rectangle-9">Save & Generate</button>
+                  <div class="form_div form_div_span">
+                    <button type="submit" class="rectangle-9">Save & Generate</button>
+                  </div>
                 </div>
         </form>
-
-        <script>
-            
-            document.addEventListener('DOMContentLoaded', function() {
-                const searchInput = document.getElementById('searchInput');
-                const mySelect = document.getElementById('mySelect');
-                const feesInput = document.getElementById('fees');
-                const updateDate = document.getElementById('date');
-                let originalOptions = Array.from(mySelect.options).map(option => ({ text: option.text, value: option.value }));
-                const currentDate = new Date();
-                const formattedDate = currentDate.toISOString().split('T')[0];
-                updateDate.value = formattedDate;
-                // const currentYearLastTwoDigits = getCurrentYearLastTwoDigits();
-
-                const feesMapping = {
-                    'BA Tamil':11400, 'BA English':12400,'B Com':17400,'B Com CA':17400,'B Com PA':17400,'B Com BI':16400,'B Com BA':16400,'B Com IT':17400,'BBA':15400,'BSC Maths':12400,'BSC Physics':12400,'BSC CS':19400,'BSC IT':19400,'BSC CT':17400,'BCA':19400,'BSC IOT':17400,'BSC CS AIDS':17400,'BSC Physical Education':13400,'MA Tamil':12950,'MA English':12950,'M Com':12950,'MSC CS':12950,'MSC IT':12950,'MSC Physics':14950,'MSC Chemistry':15950,'MBA':28950,'PGDCA':6050,
-                };
-
-                const uidMiddleMapping = {
-                    'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
-                };
-
-//     function getCurrentYearLastTwoDigits() {
-//         return currentDate.getFullYear().toString().slice(-2);
-//     }
-
-//     async function updateTokenInput(collectionName) {
-//     try {
-//         const response = await fetch(`/get-collection-count?collectionName=${collectionName}`);
-//         const data = await response.json();
-//         const tokenNumber = data.count + 1; // Add 1 as it will be the next token number
-//         const uid = generateUID(collectionName, tokenNumber);
-//         document.getElementById('uid').value = uid;
-//         document.getElementById('token').value = tokenNumber; // Set token number in token input box
-//         alert(`UID: ${uid}`);
-//     } catch (error) {
-//         console.error('Error:', error);
-//     }
-// }
-
-
-
-// function generateUID(courseName, tokenNumber) {
-//     const middlePart = uidMiddleMapping[courseName] || '';
-//     return `${currentYearLastTwoDigits}-${middlePart}-${tokenNumber.toString().padStart(3, '0')}`;
-// }
-
-
-                function updateFees(optionValue) {
-                    feesInput.value = feesMapping[optionValue] || 0;
+        
+       <% if(typeof uid  !='undefined' && typeof s_name !='undefined' ){%>
+        <div id="popup" class="popup">
+            <!-- Popup content -->
+            <div class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <h1>Admission Confirmed</h1>
+              <p>UID: <%= uid %> </p>
+              <p>Name: <%= s_name %> </p>
+              <h2>&#127881;</h2>
+            </div>
+        </div>
+        <%}%>
+        <script> 
+          document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const mySelect = document.getElementById('mySelect');
+            const feesInput = document.getElementById('fees');
+            const updateDate = document.getElementById('date');
+            let originalOptions = Array.from(mySelect.options).map(option => ({ text: option.text, value: option.value }));
+            const currentDate = new Date();
+            const formattedDate = currentDate.toISOString().split('T')[0];
+            updateDate.value = formattedDate;
+    
+            function filterOptions(searchValue) {
+                mySelect.innerHTML = '';
+                let filteredOptions = originalOptions.filter(option => option.text.toLowerCase().includes(searchValue.toLowerCase()));
+                
+                filteredOptions.forEach(option => {
+                    let newOption = new Option(option.text, option.value);
+                    mySelect.add(newOption);
+                });
+    
+                if (filteredOptions.length === 1) {
+                    searchInput.value = filteredOptions[0].text;
+                    updateFees(filteredOptions[0].value); // Update fees when only one option is available
                 }
-            
-                function filterOptions(searchValue) {
-                    mySelect.innerHTML = '';
-                    let filteredOptions = originalOptions.filter(option => option.text.toLowerCase().includes(searchValue.toLowerCase()));
-                    
-                    filteredOptions.forEach(option => {
-                        let newOption = new Option(option.text, option.value);
-                        mySelect.add(newOption);
-                    });
-            
-                    if (filteredOptions.length === 1) {
-                        searchInput.value = filteredOptions[0].text;
-                        updateFees(filteredOptions[0].text);
-                        // updateTokenInput(filteredOptions[0].text);
+            }
+    
+            function updateFees(optionValue) {
+                <% fitchdata.forEach((item) => { %>
+                    if ('<%= item.key %>' === optionValue) {
+                        console.log('<%= item.fees %>');
+                        feesInput.value = '<%= item.fees %>'; // Set fees value to the input
                     }
-                }
-            
-                searchInput.addEventListener('input', function() {
-                    filterOptions(searchInput.value);
-                });
-            
-                mySelect.addEventListener('change', function() {
-                    searchInput.value = mySelect.options[mySelect.selectedIndex].text;
-                    updateFees(mySelect.value);
-                    // updateTokenInput(mySelect.value);
-                });
-            
-                filterOptions(''); // Initialize the select with all options
+                <% }) %>
+            }
+    
+            searchInput.addEventListener('input', function() {
+                filterOptions(searchInput.value);
             });
-            </script>
+    
+            mySelect.addEventListener('change', function() {
+                searchInput.value = mySelect.options[mySelect.selectedIndex].text;
+                updateFees(mySelect.value);
+            });
+    
+            filterOptions(''); // Initialize the select with all options
+        });
+    
+        // Function to close the popup
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const mySelect = document.getElementById('mySelect');
+        const feesInput = document.getElementById('fees');
+        const updateDate = document.getElementById('date');
+        let originalOptions = Array.from(mySelect.options).map(option => ({ text: option.text, value: option.value }));
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().split('T')[0];
+        updateDate.value = formattedDate;
+
+        function filterOptions(searchValue) {
+            mySelect.innerHTML = '';
+            let filteredOptions = originalOptions.filter(option => option.text.toLowerCase().includes(searchValue.toLowerCase()));
+            
+            filteredOptions.forEach(option => {
+                let newOption = new Option(option.text, option.value);
+                mySelect.add(newOption);
+            });
+
+            if (filteredOptions.length === 1) {
+                searchInput.value = filteredOptions[0].text;
+                updateFees(filteredOptions[0].value); // Update fees when only one option is available
+            }
+        }
+
+        function updateFees(optionValue) {
+            <% fitchdata.forEach((item) => { %>
+                if ('<%= item.key %>' === optionValue) {
+                    console.log('<%= item.fees %>');
+                    feesInput.value = '<%= item.fees %>'; // Set fees value to the input
+                }
+            <% }) %>
+        }
+
+        searchInput.addEventListener('input', function() {
+            filterOptions(searchInput.value);
+        });
+
+        mySelect.addEventListener('change', function() {
+            searchInput.value = mySelect.options[mySelect.selectedIndex].text;
+            updateFees(mySelect.value);
+        });
+
+        filterOptions(''); // Initialize the select with all options
+    });
+
+    // Function to close the popup
+    function closePopup() {
+        document.getElementById("popup").style.display = "none";
+    }    </script>
             
