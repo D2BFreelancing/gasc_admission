@@ -3,7 +3,7 @@ const app = express();
 const bp = require('body-parser');
 const express_layouts = require('express-ejs-layouts');
 const routes = require('./server/routers/router');
-const models = require('./server/models/models');
+require('./server/models/models');
 port=300;
 
 const mongoose = require('mongoose');
