@@ -5,7 +5,7 @@ const controller = require('../controllers/controller');
 
 //const {setCourse} = require("../models/models")
 
-router.get('/',controller.login);//First  page
+router.get('/',controller.login);//home page
 router.get('/home',controller.home);//home page
 router.post('/login',controller.login_fill);//login form 
 router.get('/sign_up',controller.sign_form);//signup form

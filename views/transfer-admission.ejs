@@ -47,7 +47,7 @@
                     <select id="mySelect" class="rectangle-4">
                       <% if (typeof options !== 'undefined') { %>
                         <% for (var i = 0; i < options.length; i++) { %>
-                          <option value="<%= options[i] %>"><%= options[i] %></option>
+                          <option value="<%= options[i].title %>"><%= options[i].title %></option>
                         <% } %>
                       <% } %>
                     </select>

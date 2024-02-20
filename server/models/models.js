@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const dept_schema = new Schema({
+const dept_schema = new mongoose.Schema({
     date:{
         type:Date,
         require:true
@@ -92,9 +92,35 @@ const courseSchema =new Schema({
 const setLimit = mongoose.model('limit',limitSchema);
 const setCourse = mongoose.model('Course',courseSchema);
 
+
 // const name="ba_tamil";
 // const model=mongoose.model(name);
 
-exports.setLimit=setLimit;
+
+
+
+
+// setCourse.find()
+// .then((course_list)=>{
+
+// for (let course of course_list) {
+//         const model_name = course.title.toLowerCase().replace(/\s+/g, '_');
+  
+//         // Check if model already exists to avoid re-compilation error
+//         let model;
+//         if (mongoose.models[model_name]) {
+//           model = mongoose.models[model_name];
+//         } else {
+//           model = mongoose.model(model_name, dept_schema);
+//         }
+  
+//         console.log(`Model created for: ${model_name}`);
+//         // You can do something with 'model' here if needed
+//       }
+//     })
+//     console.log(mongoose.modelNames());
+
+
 exports.setCourse=setCourse;
+exports.setLimit=setLimit;
 exports.dept_schema=dept_schema;
