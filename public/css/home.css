@@ -1,0 +1,44 @@
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;   
+    background: linear-gradient(25deg, #f3ffe0 50%, #adffcf 50%);
+    height: 100vh;
+}
+
+@keyframes animateBg {
+  100% {
+    filter:hue-rotate(360deg);
+}
+}
+
+.img_logo img{
+    padding-top: 50px;
+}
+
+.admission_img{
+  animation:animateBg 4s linear infinite; 
+}
+
+.clg_name{
+    color: blue;
+    font-family:'Times New Roman', Times, serif;
+    font-weight: 800;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+    from {
+      text-shadow: 0 0 10px #22bcf8, 0 0 20px #22bcf8, 0 0 30px #22bcf8, 0 0 40px #22bcf8, 0 0 50px #22bcf8, 0 0 60px #70d3fa, 0 0 70px #70d3fa;
+    }
+    
+    to {
+      text-shadow: 0 0 20px #bdf8fc 0 30px #bdf8fc, 0 0 40px #bdf8fc, 0 0 50px #bdf8fc, 0 0 60px #b12424, 0 0 70px #b61c24, 0 0 80px #9c0909;
+    }
+  }
+
+.un_admission{
+    color: blueviolet;
+}
+
+

@@ -1,0 +1,224 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+}
+/* -----------------------------------search_uid-------------------------------- */
+.search{
+    margin-top: 25px;
+    margin-left: 20px;
+    width: 80%;
+    height: 40px;
+}
+
+.search_btn{
+    margin-left: 10px;
+    border-radius: 10px;
+    height: 5vh;
+    border: none;
+    width: 100px;
+    /* box-shadow: #dc2019 0px 7px 29px 0px; */
+    box-shadow: 0px 0px 4px black;
+    color: white;
+    background-color: #00f73e;
+}
+
+.search_btn:hover{
+    box-shadow: #000000 0px 7px 20px 0px;
+    cursor: pointer;
+    letter-spacing: 1PX;
+    background-color: #DC5D19;
+    color: white;
+}
+
+.search_box{
+    width: 300px;
+    border-radius: 10px;
+    height: 5vh;
+    border: none;
+    /* box-shadow: #dc2019 0px 7px 29px 0px; */
+    box-shadow: 2px 2px 7px black;
+}
+
+.search_box:hover{
+    border: none;
+}
+
+.search_box:active{
+    border: none;
+}
+
+.search label{
+    padding-left: 74px;
+    font-size: 20px;
+    color: rgb(32, 30, 34);
+    font-weight: 600;
+}
+
+.not_found{
+    font-size: 20px;
+    padding-left: 20px;
+    color: red;
+}
+/* -----------------------------------search_uid-------------------------------- */
+.heading{
+    text-align: center;
+    text-align: center;
+    font-size: 30px;
+    justify-content: center;
+   padding-top: 25px;
+}
+.form_container {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-left: 30px;
+    background-color: rgb(255, 255, 255);
+    width: 1300px;
+    height: 76vh;
+    border-radius: 15px;
+    box-shadow: #000000 0px 5px 29px 0px;
+}
+
+.form_div {
+    display: flex;
+    flex-direction: column;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 20px;
+
+}
+
+
+.form_div_span {
+    grid-column: 1/span 2;
+}
+
+
+.form_div label {
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+}
+
+.form_div input {
+    padding: 10px;
+    outline: none;
+    border: none;
+    background-color:rgb(212, 255, 203);
+    border-radius: 10px;
+    border-bottom: 2px solid rgb(119, 119, 199);
+    font-size: 17px;
+    
+    
+}
+
+.search-container input{
+    padding-top: 11px;
+    width: 600px;
+
+}
+
+
+.search-container label{
+    display: grid;
+    grid-template-columns: 1rem;
+}
+
+.rectangle-9{
+   margin-left: 550px;
+   font-size: 15px;
+   font-weight: 600;
+   background-color:#00f73e;
+   outline: none;
+   border: none;
+   width: 180px;
+   height: 40px;
+   border-radius: 19px;
+   cursor: pointer;
+}
+
+.rectangle-9:hover{
+    letter-spacing: 1PX;
+    background-color: #DC5D19;
+    color: white;
+    box-shadow: #DC5D19 0px 7px 29px 0px;
+}
+
+.rectangle-9:active{
+    letter-spacing: 1PX;
+    background-color: #DC5D19;
+    color: white;
+    box-shadow: #dc2019 0px 7px 29px 0px;
+    transform: translateY(10px);
+}
+
+.rectangle-4{
+    border: none;
+    border-radius: 09px;
+    box-shadow: #2a664a 0px 5px 5px;
+    height: 5vh;
+}
+
+/* ----------------------------------------popup--------------------------------- */
+  /* Popup container */
+  .popup {
+    display: block; 
+    position: fixed; 
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 60px; /* 60px from the top */
+}
+
+/* Popup content */
+.popup-content {
+    background-color: #98ffbf;
+    margin: 5% auto; /* 5% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+    height: 30vh;
+    border-radius: 15px; /* Could be more or less, depending on screen size */
+    box-shadow: #055a2f 0px 7px 29px 0px;
+}
+
+.popup-content h2{
+    text-align: center;
+    justify-content: center;
+    padding-top: 20px;
+    font-size: 30px;
+}
+
+.popup-content h1{
+    text-align: center;
+    color: #790e0e;
+}
+
+.popup-content p{
+    font-size: 20px;
+    font-weight: 900;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: rgb(0, 0, 0);
+    padding-top: 5px;
+    padding-left: 190px;
+}
+
+/* Close button */
+.close {
+    color: #000000;
+    float: right;
+    font-size: 38px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: rgb(255, 0, 0);
+    text-decoration: none;
+    cursor: pointer;
+}

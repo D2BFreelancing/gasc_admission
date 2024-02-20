@@ -1,12 +1,76 @@
+<link rel="stylesheet" href="/css/cancel.css">
 
+<h1 class="admission_name">Cancel Admission</h1>
+<div class="cancel_page">
+    <form action="/cancel_uid_details" method="post">
+        <div class="search_contain">
+            <div class="search">
+                <label for="">Search ID</label>
+                <input type="text" name="uid" id="uid" placeholder="search cancel ID">
+            </div>
+            <div class="btn">
+                <button type="submit" class="rectangle-9">Search</button>
+            </div>
+        </div>
+    </form>
+    
+    <%if (typeof data !='undefined' ){%>
+        <%if (data=='no data') {%>
+            <div id="popup" class="popup">
+                <!-- Popup content -->
+                <div class="popup-content">
+                <span class="close" onclick="closePopup()">&times;</span>
+                <h1>User not Found</h1>
+                <h1><img src="/img/error.png" alt="" width="100px"></h1>
+                </div>
+              </div>
+       <% }else{%>
+         <!-- <table border="2" style="border-collapse: collapse;">
+            <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th>User Id</th>
+                <th>Options</th>
+            </tr>
+            <tr>
+                <td><%= data ?data.s_name :"no name" %></td>
+                <td><%= data ?data.cname :"no name" %></td>
+                <td><%= data ?data.uid :"no name" %></td>
+                <td><button> <a href="/cancel_update/<%= data.cname %>/<%= data.uid%>" >Cancel</a></button></td>
+                
+            </tr>
+          </table> -->
+          <div class="data_main">
+            <div class="div_name">
+                <span>Name :</span>
+                <span><%= data ?data.s_name :"no name" %></span>
+            </div>
+            <div class="div_name">
+                <span>Department :</span>
+                <span><%= data ?data.cname :"no name" %></span>
+            </div>
+            <div class="div_name">
+                <span>User Id :</span>
+                <span><%= data ?data.uid :"no name" %></span>
+            </div>
+            <div class="div_btn">
+                <a href="/cancel_update/<%= data.cname %>/<%= data.uid%>"><button class="data_btn">Cancel</button></a>
+            </div>
+          </div>
+        <% } %>
+    
+    <%  }else{%>
+      <!-- <h2>Without data</h2> -->
+    
+         <% } %>
+    
+</div>
 
-
-
-<button><a href="/admission_cancel">Cancel Admission</a></button>
-
-<button><a href="/cancel_reports">Cancel Reports</a></button>
-
-
+            <script>
+                function closePopup() {
+                    document.getElementById("popup").style.display = "none";
+                }
+            </script>
 
 
 
