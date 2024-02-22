@@ -1,37 +1,28 @@
-<form action="/dept_cancel_reports" method="post">
-    <label for="dept">Select Course</label>
-    <select name="dept" id="dept">
-        <% options.forEach(function(option) { %>
-            <option value="<%= option %>"><%= option %></option>
-        <% }); %>
-    </select>
-<button type="submit">search</button>
-</form>
-
-<% if (typeof data != 'undefined') { %>
-    <% if (data == 'no data') { %>
+<% if (typeof fulldata !== 'undefined') { %>
+  <% if (fulldata.length === 0) { %>
       <br>
       <h2>User not Found</h2>
-    <% } else { %>
-      <h2>No of Canceled Admission in <span><%= dept %></span>:<%= data.length %></h2>
-      <table border="2" style="border-collapse: collapse;">
-        <tr>
-            <th>Date</th>
-          <th>Name</th>
-          <th>Department</th>
-          <th>User Id</th>
-        </tr>
-        <% data.forEach(function(item) { %>
-          <tr>
-            <td><%= item ? item.date : "no name" %></td>
-            <td><%= item ? item.s_name : "no name" %></td>
-            <td><%= item ? item.cname : "no name" %></td>
-            <td><%= item ? item.uid : "no name" %></td>
-          </tr>
-        <% }); %>
-      </table>
-    <% } %>
   <% } else { %>
-    <h2>Without data</h2>
+      <p><%= date ? date : "no date" %></p>
+      <p>Number of Entries: <%= fulldata.length %></p>
+      <table border="2" style="border-collapse: collapse;">
+          <tr>
+              <th>Name</th>
+              <th>Department</th>
+              <th>User Id</th>
+              <!-- <th>Options</th> -->
+          </tr>
+          <% fulldata.forEach(item => { %>
+              <tr>
+                  <td><%= item.s_name ? item.s_name : "no name" %></td>
+                  <td><%= item.cname ? item.cname : "no name" %></td>
+                  <td><%= item.uid ? item.uid : "no name" %></td>
+                  <!-- <td><button><a href="#">view</a></button></td> -->
+              </tr>
+          <% }) %>
+      </table>
   <% } %>
-  
+<% } else { %>
+  <br>
+  <h2>User not Found</h2>
+<% } %>

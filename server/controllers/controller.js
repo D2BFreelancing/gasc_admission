@@ -3,25 +3,29 @@ const bp = require('body-parser');
 const app = express();
 const data = require('../database/database');
 const ba_tamil = require('../models/models');
-const setLimit = require('../models/models')
-
+const {setLimit} = require('../models/models');
+ const {setCourse} = require('../models/models');
+console.log(ba_tamil);
 const login_data=require('../models/login');
 const mongoose = require('mongoose');
-
+const feesMapping = {
+    'BA Tamil':11400, 'BA English':12400,'B Com':17400,'B Com CA':17400,'B Com PA':17400,'B Com BI':16400,'B Com BA':16400,'B Com IT':17400,'BBA':15400,'BSC Maths':12400,'BSC Physics':12400,'BSC CS':19400,'BSC IT':19400,'BSC CT':17400,'BCA':19400,'BSC IOT':17400,'BSC CS AIDS':17400,'BSC Physical Education':13400,'MA Tamil':12950,'MA English':12950,'M Com':12950,'MSC CS':12950,'MSC IT':12950,'MSC Physics':14950,'MSC Chemistry':15950,'MBA':28950,'PGDCA':6050,
+};
 const uidMiddleMapping = {
     'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
 };
-const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
+const option_val = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
     const MAX_DOCUMENTS_PER_COLLECTION  =  async (req,res)=>{
         const setting = await setLimit.find();
         console.log(setting);
         return setting.limit;
     }
 
-// exports.admin = async (req,res)=>{
-    
-//     res.render('admin', {  });
-// }
+    exports.home=async(req,res)=>{
+        res.redirect('home');
+    }
+
+
 exports.update_limit = async (req,res)=>{
     const newLimit = req.body.newLimit;
     if (newLimit && !isNaN(newLimit)) {
@@ -48,18 +52,18 @@ exports.login_fill=async(req,res)=>{
     const pass=req.body.password;
     const user=await login_data.findOne({name});
     if (!user) {
-     res.send('User not found');
+     res.render('login');
     }
     if (name === 'admin') {
         const setting = await setLimit.find();
         console.log(setting);
-        res.render('admin',{layout:false,setting});
+        res.render('admin',{layout:false});
         return;
     }
     if (user.pass === pass) {
         res.render('home');
     } else {
-     res.send('Invalid password');
+        res.send("onvalid password")
     }
     
 }
@@ -74,24 +78,28 @@ exports.signdata=async(req,res)=>{
     }
 const insert=await login_data.insertMany([data]);
 console.log(insert);
-res.render('login')
+res.render('login',{layout:false})
 }
  exports.home = async(req,res)=>{
     res.render('home');
  }
    
  exports.new = async(req,res)=>{
-   
+   const fitchdata= await setCourse.find({});
+   console.log(fitchdata);  
   
-   const options = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
-  res.render('new-admission', { options: options,uid:"nodata", });
+  res.render('new-admission', { uid:"nodata",fitchdata});
  }
  exports.new2 = async(req,res)=>{
+    const fitchdata= await setCourse.find({});
+   console.log(fitchdata);  
     var uid=req.params.id;
-     res.render('new-admission', { options: options,uid});
+    var s_name=req.params.s_name;
+    console.log("sound"+req.params);
+     res.render('new-admission', { options: option_val,uid,s_name,fitchdata});
   }
  exports.transfer = async(req,res)=>{
-    res.render('transfer-admission',{data:null,options:options});
+    res.render('transfer-admission',{data:null,options:option_val});
  }
 
  exports.cancel = async(req,res)=>{
@@ -99,15 +107,29 @@ res.render('login')
  }
  
  exports.report = async(req,res)=>{
-    res.render('reports',{options:options});
+    res.render('reports',{options:option_val});
  }
- exports.courseadd=async(req,res)=>{
-    var name=req.body.course;
-    var st=req.body.short;
-    var fees=req.body.fees;
-    // options.push(name)
-    res.send({name,st,fees});
- }
+
+
+ exports.courseAdd = async (req, res) => {
+    const { course,fees,key } = req.body; // Extracting data from request body
+
+    try {
+        const newCourse = new setCourse({
+            title: course,
+            fees: Number(fees),
+            key: key
+        });
+
+        await newCourse.save();
+        res.render('admin',{layout:false});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Failed to add new course");
+    }
+};
+
+
 
  function getCurrentYearLastTwoDigits() {
     var currentDate= new Date();
@@ -153,7 +175,7 @@ exports.dept = async (req, res) => {
 
         await saveDocument(newDocument);
         // After successful insertion, you can redirect or respond as needed
-        res.redirect(`/new_student/${uid}`);
+        res.redirect(`/new_student/${uid}/${req.body.s_name}`);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error saving data');
@@ -193,12 +215,12 @@ for(var dept of models){
   
    if (data!==null) {
     found=true;
-    res.render('transfer-admission',{data,options});
+    res.render('transfer-admission',{data,options:option_val});
      }
        }
    }
   if (!found) {
-    res.render('transfer-admission',{data:'no data',options});
+    res.render('transfer-admission',{data:'no data',options:option_val});
     
   }
    
@@ -245,7 +267,7 @@ exports.transfer_admission = async (req, res) => {
             token: req.body.token,
             s_name: req.body.s_name,
             uid: req.body.uid,
-            fees: req.body.fees,
+            fees: req.body.new_fees,
             in_dept:true,
             cancel:false
         });
@@ -253,7 +275,7 @@ exports.transfer_admission = async (req, res) => {
 
         sound(collectionName);
 
-        res.redirect('/transfer-admission');
+        res.redirect('transfer-admission');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error during transfer');
@@ -261,34 +283,30 @@ exports.transfer_admission = async (req, res) => {
 };
 
 
+exports.searchAndDateFind = async (req, res, next) => {
+    const transformInputToCollectionName = (input) => {
+        return input.toLowerCase().replace(/\s+/g, '_');
+    };
 
-exports.searchAndDateFind = async (req, res) => {
+    const { dept, date } = req.body;
+    const collectionName = transformInputToCollectionName(dept);
+
+    let data = {
+        number_of_entries: 0,
+        number_of_entries_in_dept: 0,
+        in_department_entries: [],
+        totalData: [],
+        fulldata: [],
+        date: ''
+    };
+
     try {
-        
-       const transformInputToCollectionName = (input) => {
-         return input.toLowerCase().replace(/\s+/g, '_');
-       }
-        const { dept, date } = req.body;
-        const collectionName = transformInputToCollectionName(dept);
-
-        let data = {
-            number_of_entries: 0,
-            number_of_entries_in_dept: 0,
-            in_department_entries: [],
-            totalData: []
-        };
-
-        // Search by department
         if (collectionName && mongoose.connection.modelNames().includes(collectionName)) {
             const Model = mongoose.model(collectionName);
+            console.log(Model);
             const totalData = await Model.find({}, { uid: 1, in_dept: 1, token: 1 });
 
-            let in_department_entries = [];
-            for (let i = 0; i < totalData.length; i++) {
-                if (totalData[i].in_dept === true) {
-                    in_department_entries.push(totalData[i]);
-                }
-            }
+            const in_department_entries = totalData.filter(entry => entry.in_dept === true);
 
             data = {
                 number_of_entries: totalData.length,
@@ -300,10 +318,9 @@ exports.searchAndDateFind = async (req, res) => {
             data.totalData = "No data available for selected course";
         }
 
-        // Search by date
         if (date) {
-            var specificDate = new Date(date);
-            var fulldata = [];
+            const specificDate = new Date(date);
+            const fulldata = [];
 
             const models = mongoose.modelNames();
             for (const modelName of models) {
@@ -311,18 +328,53 @@ exports.searchAndDateFind = async (req, res) => {
                 const modelData = await Model.find({ date: specificDate });
                 fulldata.push(...modelData);
             }
+
             data.fulldata = fulldata;
-            console.log(fulldata);
             data.date = date;
         }
 
-        res.render('reports', { options, data,fulldata,date});
+        res.render('admission_report', { options: option_val, data });
     } catch (error) {
-        console.error(error);
-        res.status(500);
+        console.log(error); // Pass error to error handling middleware
     }
-}
+};
 
+
+exports.cancel_data = async (req, res) => {
+    try {
+        const transformInputToCollectionName = (input) => {
+            return input.toLowerCase().replace(/\s+/g, '_');
+        };
+
+        const { dept, date } = req.body;
+        const collectionName = transformInputToCollectionName(dept);
+
+        if (date) {
+            var specificDate = new Date(date);
+            var fulldata = [];
+
+            const models = mongoose.modelNames();
+            for (const modelName of models) {
+                const Model = mongoose.model(modelName);
+                const modelData = await Model.find({ date: specificDate,cancel:true });
+                fulldata.push(...modelData);
+            }
+            console.log(fulldata);
+        }
+
+       return res.render('admission_reports', { option_val,fulldata,date});
+
+    } catch (err) {
+        console.log(err);
+       return  res.status(500).send(err);
+    }
+};
+
+
+
+exports.admission_report=async(req,res)=>{
+    res.render('admission_report',{options:option_val});
+}
   //--------------------------------------cancel UID---------------------------------------
 exports.cancel_uid = async(req,res)=>{
     const fetch=req.body.uid;
@@ -339,12 +391,12 @@ for(var dept of models){
   
    if (data!==null) {
     found=true;
-    res.render('cancel_admission',{data});
+    res.render('cancel',{data});
      }
        }
    }
   if (!found) {
-    res.render('cancel_admission',{data:'no data'});
+    res.render('cancel',{data:'no data'});
     
   }
 }
@@ -360,17 +412,12 @@ exports.update_uid = async (req,res)=>{
    
  const data= await  dept_model.findOneAndUpdate({uid:uidToUpdate},{$set:{in_dept:false,cancel:true}});
  console.log(data);
- res.render('cancel_admission');
+ res.render('cancel');
 
-}
-
-
-exports.cancel_admission = async(req,res)=>{
-    res.render('cancel_admission');
 }
 
 exports.cancel_reports = async(req,res)=>{
-    res.render('cancel_reports');
+    res.render('cancel_reports',{options:option_val});
 }
 
 exports.cancel_reports_date = async(req,res)=>{
@@ -400,45 +447,48 @@ exports.date_cancel_reports = async(req,res)=>{
     res.render('date_cancel',{fullDate,date})
 
 }
-exports.dept_cancel_reports = async (req,res)=>{
+exports.dept_cancel_reports = async (req, res) => {
     try {
+        // Function to transform department input into a collection name
         const transformInputToCollectionName = (input) => {
             return input.toLowerCase().replace(/\s+/g, '_');
-        }
-    
+        };
+
+        // Function to format dates
         const formatDate = (date) => {
             const d = new Date(date);
-            const day = ('0' + d.getDate()).slice(-2); // Add leading 0 if needed
-            const month = ('0' + (d.getMonth() + 1)).slice(-2); // Add leading 0 if needed, month is 0-indexed
+            const day = ('0' + d.getDate()).slice(-2);
+            const month = ('0' + (d.getMonth() + 1)).slice(-2);
             const year = d.getFullYear();
-            return `${day}-${month}-${year}`;
-        }
-    
-        const { dept } = req.body;
+            return `${year}-${month}-${day}`;
+        };
+
+        // Extract department from request body or query
+        const { dept } = req.body; // or req.query for GET requests
         const collectionName = transformInputToCollectionName(dept);
-    
+
         let data = [];
-        // Search by department
         if (collectionName && mongoose.connection.modelNames().includes(collectionName)) {
             const Model = mongoose.model(collectionName);
             const totalData = await Model.find({ cancel: true });
-    
-            // Format each date and add cname to the modified object before pushing it into data
+
+            // Format date and add cname for each item
             totalData.forEach(item => {
                 const formattedItem = {
                     ...item._doc,
                     date: formatDate(item.date),
-                    cname: dept // Here we are adding the dept name as cname to each item
+                    cname: dept
                 };
                 data.push(formattedItem);
             });
         }
-        console.log(data);
-        res.render('dept_cancel', { options, data, dept }); // Pass dept to the template if needed
+        const options = option_val;
+        res.render('cancel_reports', { data, options, dept });
     } catch (error) {
         console.error(error);
-        res.status(500);
+        res.status(500).send("Server error");
     }
-    
-    
-}
+};
+
+
+
