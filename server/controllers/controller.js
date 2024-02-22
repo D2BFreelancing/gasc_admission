@@ -311,9 +311,9 @@ exports.transfer_admission = async (req, res) => {
 exports.searchAndDateFind = async (req, res) => {
     try {
         
-       const transformInputToCollectionName = (input) => {
-         return input.toLowerCase().replace(/\s+/g, '_');
-       }
+        const transformInputToCollectionName = (input) => {
+            return input.toLowerCase().replace(/\s+/g, '_');
+        }
         const dept = req.body.dept;
         const collectionName = transformInputToCollectionName(dept);
 
@@ -345,15 +345,15 @@ exports.searchAndDateFind = async (req, res) => {
         } else {
             data.totalData = "No data available for selected course";
         }
-        res.render('dept_cancel', { option_val, data});
+        res.render('dept_cancel', { option_val, data });
 
     }
     
- catch (error) {
-    console.error(error);
-    res.status(500);
+    catch (error) {
+        console.error(error);
+        res.status(500);
+    }
 }
-
 exports.report_date= async (req,res) =>{
       const date=req.body.date;
             var specificDate = new Date(date);
@@ -368,7 +368,7 @@ exports.report_date= async (req,res) =>{
             res.render('date_cancel', { option_val,fulldata,date});
         
         }
-}
+
 
 
 exports.cancel_data = async (req, res) => {
@@ -403,9 +403,19 @@ exports.cancel_data = async (req, res) => {
 
 
 
-exports.admission_report=async(req,res)=>{
-    res.render('admission_report',{options:option_val});
+exports.admission_report = async (req, res) => {
+    const fitchdata= await setCourse.find({});
+    res.render('admission_report',{options:fitchdata});
 }
+
+
+
+
+
+
+
+
+
   //--------------------------------------cancel UID---------------------------------------
 exports.cancel_uid = async(req,res)=>{
     const fetch=req.body.uid;
