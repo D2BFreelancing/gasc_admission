@@ -317,36 +317,41 @@ exports.searchAndDateFind = async (req, res) => {
         const dept = req.body.dept;
         const collectionName = transformInputToCollectionName(dept);
 
-    let data = {
-        number_of_entries: 0,
-        number_of_entries_in_dept: 0,
-        in_department_entries: [],
-        totalData: [],
-        fulldata: [],
-        date: ''
-    };
+        let data = {
+            number_of_entries: 0,
+            number_of_entries_in_dept: 0,
+            in_department_entries: [],
+            totalData: [],
+            fulldata: [],
+            date: ''
+        };
 
-    try {
-        if (collectionName && mongoose.connection.modelNames().includes(collectionName)) {
-            const Model = mongoose.model(collectionName);
-            console.log(Model);
-            const totalData = await Model.find({}, { uid: 1, in_dept: 1, token: 1 });
+        try {
+            if (collectionName && mongoose.connection.modelNames().includes(collectionName)) {
+                const Model = mongoose.model(collectionName);
+                console.log(Model);
+                const totalData = await Model.find({}, { uid: 1, in_dept: 1, token: 1 });
 
-            const in_department_entries = totalData.filter(entry => entry.in_dept === true);
+                const in_department_entries = totalData.filter(entry => entry.in_dept === true);
 
-            data = {
-                number_of_entries: totalData.length,
-                number_of_entries_in_dept: in_department_entries.length,
-                in_department_entries: in_department_entries,
-                totalData: totalData
-            };
-        } else {
-            data.totalData = "No data available for selected course";
+                data = {
+                    number_of_entries: totalData.length,
+                    number_of_entries_in_dept: in_department_entries.length,
+                    in_department_entries: in_department_entries,
+                    totalData: totalData
+                };
+            } else {
+                data.totalData = "No data available for selected course";
+            }
+            res.render('dept_cancel', { option_val, data });
+
         }
-        res.render('dept_cancel', { option_val, data });
-
-    }
     
+        catch (error) {
+            console.error(error);
+            res.status(500);
+        }
+    }
     catch (error) {
         console.error(error);
         res.status(500);
@@ -366,7 +371,7 @@ exports.report_date= async (req,res) =>{
             res.render('date_cancel', { option_val,fulldata,date});
         
         }
-}
+
 
 
 exports.cancel_data = async (req, res) => {
