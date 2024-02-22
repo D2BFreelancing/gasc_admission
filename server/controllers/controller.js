@@ -98,7 +98,6 @@ exports.signdata=async(req,res)=>{
 const insert=await login_data.insertMany([data]);
 console.log(insert);
 res.render('login',{layout:false})
-res.render('login',{layout:false})
 }
  exports.home = async(req,res)=>{
     res.render('home');
@@ -292,6 +291,7 @@ exports.transfer_admission = async (req, res) => {
             s_name: req.body.s_name,
             uid: req.body.uid,
             fees: req.body.new_fees,
+            fees: req.body.new_fees,
             in_dept:true,
             cancel:false
         });
@@ -317,24 +317,22 @@ exports.searchAndDateFind = async (req, res) => {
         const dept = req.body.dept;
         const collectionName = transformInputToCollectionName(dept);
 
-        let data = {
-            number_of_entries: 0,
-            number_of_entries_in_dept: 0,
-            in_department_entries: [],
-            totalData: []
-        };
+    let data = {
+        number_of_entries: 0,
+        number_of_entries_in_dept: 0,
+        in_department_entries: [],
+        totalData: [],
+        fulldata: [],
+        date: ''
+    };
 
-        // Search by department
+    try {
         if (collectionName && mongoose.connection.modelNames().includes(collectionName)) {
             const Model = mongoose.model(collectionName);
+            console.log(Model);
             const totalData = await Model.find({}, { uid: 1, in_dept: 1, token: 1 });
 
-            let in_department_entries = [];
-            for (let i = 0; i < totalData.length; i++) {
-                if (totalData[i].in_dept === true) {
-                    in_department_entries.push(totalData[i]);
-                }
-            }
+            const in_department_entries = totalData.filter(entry => entry.in_dept === true);
 
             data = {
                 number_of_entries: totalData.length,
@@ -368,7 +366,39 @@ exports.report_date= async (req,res) =>{
             res.render('date_cancel', { option_val,fulldata,date});
         
         }
+}
 
+
+exports.cancel_data = async (req, res) => {
+    try {
+        const transformInputToCollectionName = (input) => {
+            return input.toLowerCase().replace(/\s+/g, '_');
+        };
+
+        const { dept, date } = req.body;
+        const collectionName = transformInputToCollectionName(dept);
+
+        if (date) {
+            var specificDate = new Date(date);
+            var fulldata = [];
+
+            const models = mongoose.modelNames();
+            for (const modelName of models) {
+                const Model = mongoose.model(modelName);
+                const modelData = await Model.find({ date: specificDate,cancel:true });
+                fulldata.push(...modelData);
+            }
+            console.log(fulldata);
+
+            data.fulldata = fulldata;
+            data.date = date;
+        }
+
+        res.render('admission_report', { options: option_val, data });
+    } catch (error) {
+        console.log(error); // Pass error to error handling middleware
+    }
+};
 
 
 exports.cancel_data = async (req, res) => {
@@ -393,13 +423,21 @@ exports.cancel_data = async (req, res) => {
             console.log(fulldata);
         }
 
-       return res.render('dept_cancel', { option_val,fulldata,date});
+       return res.render('admission_reports', { option_val,fulldata,date});
 
     } catch (err) {
         console.log(err);
        return  res.status(500).send(err);
     }
 };
+
+
+
+exports.admission_report = async (req, res) => {
+    const fitchdata= await setCourse.find({});
+    res.render('admission_report',{options:fitchdata});
+}
+
 
 
 
