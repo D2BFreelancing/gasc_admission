@@ -17,6 +17,7 @@
                           <label for="searchInput">Course</label>
                           <input type="text" id="searchInput" placeholder="&nbsp;&nbsp;&nbsp;Search..." class="rectangle-3" name="cname" required>
                           <select id="mySelect" class="rectangle-4" onchange="updateFees(this.value)">
+                            <option value="default" selected disabled hidden>Choose a course...</option>
                             <% if (fitchdata && fitchdata.length > 0) { %>
                               <% for(var i=0; i < fitchdata.length; i++) { %>
                                 <option value="<%= fitchdata[i].key %>"><%= fitchdata[i].title %></option>
@@ -104,54 +105,8 @@
         // Function to close the popup
         function closePopup() {
             document.getElementById("popup").style.display = "none";
-        }document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('searchInput');
-        const mySelect = document.getElementById('mySelect');
-        const feesInput = document.getElementById('fees');
-        const updateDate = document.getElementById('date');
-        let originalOptions = Array.from(mySelect.options).map(option => ({ text: option.text, value: option.value }));
-        const currentDate = new Date();
-        const formattedDate = currentDate.toISOString().split('T')[0];
-        updateDate.value = formattedDate;
-
-        function filterOptions(searchValue) {
-            mySelect.innerHTML = '';
-            let filteredOptions = originalOptions.filter(option => option.text.toLowerCase().includes(searchValue.toLowerCase()));
-            
-            filteredOptions.forEach(option => {
-                let newOption = new Option(option.text, option.value);
-                mySelect.add(newOption);
-            });
-
-            if (filteredOptions.length === 1) {
-                searchInput.value = filteredOptions[0].text;
-                updateFees(filteredOptions[0].value); // Update fees when only one option is available
-            }
         }
-
-        function updateFees(optionValue) {
-            <% fitchdata.forEach((item) => { %>
-                if ('<%= item.key %>' === optionValue) {
-                    console.log('<%= item.fees %>');
-                    feesInput.value = '<%= item.fees %>'; // Set fees value to the input
-                }
-            <% }) %>
-        }
-
-        searchInput.addEventListener('input', function() {
-            filterOptions(searchInput.value);
-        });
-
-        mySelect.addEventListener('change', function() {
-            searchInput.value = mySelect.options[mySelect.selectedIndex].text;
-            updateFees(mySelect.value);
-        });
-
-        filterOptions(''); // Initialize the select with all options
-    });
-
-    // Function to close the popup
-    function closePopup() {
-        document.getElementById("popup").style.display = "none";
-    }    </script>
+        
+        
+          </script>
             

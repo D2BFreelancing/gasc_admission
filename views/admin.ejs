@@ -18,4 +18,35 @@
 
     <input type="submit" value="Submit">
 </form>
-<a href="/sign_up">Add New User</a>
+<a href="/sign_up">Add New User</a><br>
+<a href="/home">Home</a><br>
+<a href="/">Login Page</a>
+<button onclick="opense()">Update  Course Information</button><br><br>
+
+<div id="updae">
+<% if (typeof option !== 'undefined' && option.length > 0) { %>
+    <form action="/updateAdmin" method="post">
+<label for="course">Course Title:</label>
+<select name="dept">
+    <option value="default" selected disabled hidden>Choose a course...</option>
+    <% option.forEach(function(option) { %>
+        <option value="<%= option.title %>"><%= option.title %></option>
+    <% }); %>
+</select>
+<% } %>
+<label for="fees">Fees:</label>
+<input type="text" name="fees" id="fees" required>
+
+<label for="key">Course Key:</label>
+<input type="text" name="key" id="key" required>
+
+<input type="submit" value="Submit">
+</form>
+
+</div>
+<script>
+    document.getElementById( "updae" ).style.display = 'none';
+    function opense(){
+        document.getElementById( "updae" ).style.display = 'block';
+    }
+</script>

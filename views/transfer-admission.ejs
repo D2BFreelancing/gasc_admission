@@ -5,19 +5,20 @@
   <label for="uid">Search UID</label>
   <input type="text" name="uid" id="uid" class="search_box">
   <input type="submit" value="Search" class="search_btn">
-  <%if (typeof data !='undefined' ){%>
-    <%if (data=='no data') {%>
-      <div id="popup" class="popup">
-        <!-- Popup content -->
-        <div class="popup-content">
-        <span class="close" onclick="closePopup()">&times;</span>
-        <h1>User not Found</h1>
-        <h1><img src="/img/error.png" alt="" width="100px"></h1>
-        </div>
-      </div>
-   <% }%>
+  
 </form>
 </div>
+<%if (typeof data !='undefined' ){%>
+  <%if (data=='no data') {%>
+    <div id="popup" class="popup">
+      <!-- Popup content -->
+      <div class="popup-content">
+      <span class="close" onclick="closePopup()">&times;</span>
+      <h1>User not Found</h1>
+      <h1><img src="/img/error.png" alt="" width="100px"></h1>
+      </div>
+    </div>
+ <% }%>
 
 
 <div class="form_sec">  
@@ -25,7 +26,7 @@
     <div class="form_container">
               <div class="form_div">
                 <label for="">Date</label>
-                <input type="date" id="date" class="rectangle-2">
+                <input type="date" id="date" name="date" class="rectangle-2">
               </div>
               <div class="form_div">
                 <label for="">User ID</label>
@@ -44,13 +45,15 @@
                   <div class="search-container">
                     <label for="New course">New&nbsp;Course</label>
                     <input type="text" id="searchInput" placeholder="Search..." class="rectangle-3" name="cname" value="<%= data ? data.change : '' %>">
-                    <select id="mySelect" class="rectangle-4">
+                    <select id="mySelect" class="rectangle-4" onchange="UpdateFees(this.value)">
+                      <option value="default" selected disabled hidden>Choose a course...</option>
                       <% if (typeof options !== 'undefined') { %>
-                        <% for (var i = 0; i < options.length; i++) { %>
-                          <option value="<%= options[i].title %>"><%= options[i].title %></option>
-                        <% } %>
+                          <% options.forEach(function(option) { %>
+                              <option value="<%= option.title %>"><%= option.title %></option>
+                          <% }); %>
                       <% } %>
-                    </select>
+                  </select>
+                  
                   </div>
                 </div>
               </div>
@@ -60,7 +63,7 @@
               </div>
               <div class="form_div">
                 <label for="">New Fees</label>
-                <input type="text" id="new_fees" class="rectangle-8" name="new_fees" readonly>
+                <input type="text" id="new_feess" class="rectangle-8" name="new_fees" readonly>
               </div>
               <div class="form_div">
                 <label for="">Balance Fees</label>
@@ -69,6 +72,7 @@
               <div class="form_div form_div_span">
                 <button type="submit" class="rectangle-9">Transfer</button>
               </div>
+              
     </div>
                
           <%  }else{%>
@@ -95,6 +99,7 @@
         
 
         <script>
+          var feee = document.getElementById('Feee')
           window.onload = function() {
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
@@ -104,24 +109,31 @@
             today = yyyy + '-' + mm + '-' + dd;
             document.getElementById('date').value = today;
           };
-
+          const mySelect = document.getElementById('mySelect');
+            const feesInput = document.getElementById('new_feess')
+          const oldFeesInput = document.getElementById('old_fees');
+          const balanceInput = document.getElementById('balance');
+          const searchInput = document.getElementById('searchInput');
           document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            const mySelect = document.getElementById('mySelect');
-            const feesInput = document.getElementById('new_fees');
-            const oldFeesInput = document.getElementById('old_fees');
-            const balanceInput = document.getElementById('balance');
+            
+          //   const mySelect = document.getElementById('mySelect');
+          //   const feesInput = document.getElementById('new_feess')
+          // const oldFeesInput = document.getElementById('old_fees');
+          // const balanceInput = document.getElementById('balance');
+            //const feesInput = document.getElementById('new_fees');
+            
+            // const balanceInput = document.getElementById('balance');
             const uidSearchForm = document.getElementById('uidSearchForm');
             const uidInput = document.getElementById('uid');
             let originalOptions = Array.from(mySelect.options).map(option => ({ text: option.text, value: option.value }));
         
-            const feesMapping = {
-                'BA Tamil': 11400, 'BA English': 12400, 'B Com': 17400, 'B Com CA': 17400, 'B Com PA': 17400, 'B Com BI': 16400, 'B Com BA': 16400, 'B Com IT': 17400, 'BBA': 15400, 'BSC Maths': 12400, 'BSC Physics': 12400, 'BSC CS': 19400, 'BSC IT': 19400, 'BSC CT': 17400, 'BCA': 19400, 'BSC IOT': 17400, 'BSC CS AIDS': 17400, 'BSC Physical Education': 13400, 'MA Tamil': 12950, 'MA English': 12950, 'M Com': 12950, 'MSC CS': 12950, 'MSC IT': 12950, 'MSC Physics': 14950, 'MSC Chemistry': 15950, 'MBA': 28950, 'PGDCA': 6050,
-            };
+            // const feesMapping = {
+            //     'BA Tamil': 11400, 'BA English': 12400, 'B Com': 17400, 'B Com CA': 17400, 'B Com PA': 17400, 'B Com BI': 16400, 'B Com BA': 16400, 'B Com IT': 17400, 'BBA': 15400, 'BSC Maths': 12400, 'BSC Physics': 12400, 'BSC CS': 19400, 'BSC IT': 19400, 'BSC CT': 17400, 'BCA': 19400, 'BSC IOT': 17400, 'BSC CS AIDS': 17400, 'BSC Physical Education': 13400, 'MA Tamil': 12950, 'MA English': 12950, 'M Com': 12950, 'MSC CS': 12950, 'MSC IT': 12950, 'MSC Physics': 14950, 'MSC Chemistry': 15950, 'MBA': 28950, 'PGDCA': 6050,
+            // };
         
-            const uidMiddleMapping = {
-                'BA Tamil': 'TL', 'BA English': 'EL', 'B Com': 'CO', 'B Com CA': 'CC', 'B Com PA': 'CP', 'B Com BI': 'BI', 'B Com BA': 'CB', 'B Com IT': 'CI', 'BBA': 'BA', 'BSC Maths': 'MA', 'BSC Physics': 'PH', 'BSC CS': 'CS', 'BSC IT': 'IT', 'BSC CT': 'CT', 'BCA': 'CA', 'BSC IOT': 'OT', 'BSC CS AIDS': 'AI', 'BSC Physical Education': 'PE', 'MA Tamil': '12', 'MA English': '10', 'M Com': '03', 'MSC CS': '06', 'MSC IT': '09', 'MSC Physics': '08', 'MSC Chemistry': '11', 'MBA': '13', 'PGDCA': '05', 'CA Foundation': 'CF'
-            };
+            // const uidMiddleMapping = {
+            //     'BA Tamil': 'TL', 'BA English': 'EL', 'B Com': 'CO', 'B Com CA': 'CC', 'B Com PA': 'CP', 'B Com BI': 'BI', 'B Com BA': 'CB', 'B Com IT': 'CI', 'BBA': 'BA', 'BSC Maths': 'MA', 'BSC Physics': 'PH', 'BSC CS': 'CS', 'BSC IT': 'IT', 'BSC CT': 'CT', 'BCA': 'CA', 'BSC IOT': 'OT', 'BSC CS AIDS': 'AI', 'BSC Physical Education': 'PE', 'MA Tamil': '12', 'MA English': '10', 'M Com': '03', 'MSC CS': '06', 'MSC IT': '09', 'MSC Physics': '08', 'MSC Chemistry': '11', 'MBA': '13', 'PGDCA': '05', 'CA Foundation': 'CF'
+            // };
         
             const currentYearLastTwoDigits = '22'; // Please replace this with actual value
         
@@ -142,24 +154,15 @@
                 const middlePart = uidMiddleMapping[courseName] || '';
                 return `${currentYearLastTwoDigits}-${middlePart}-${tokenNumber.toString().padStart(3, '0')}`;
             }
+
+
+          
         
-            function updateFees(optionValue) {
-                feesInput.value = feesMapping[optionValue] || 0;
-                updateTokenInput(optionValue);
-            }
-        
-            function calculateAndDisplayBalance() {
-                const oldFees = parseFloat(oldFeesInput.value) || 0;
-                const newFees = parseFloat(feesInput.value) || 0;
-                const balance = newFees - oldFees;
-                balanceInput.value = balance.toFixed(2);
-            }
-        
-            function updateFormFields(optionValue) {
-                const feesValue = feesMapping[optionValue] || 0;
-                feesInput.value = feesValue;
-                calculateAndDisplayBalance();
-            }
+            // function updateFormFields(optionValue) {
+            //     // const feesValue = feesMapping[optionValue] || 0;
+            //     // feesInput.value = feesValue;
+            //     calculateAndDisplayBalance();
+            // }
         
             uidSearchForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -204,7 +207,39 @@
             });
         
             filterOptions('');
+
+
+
         });
+        
+        function calculateAndDisplayBalance() {
+        const oldFees = parseFloat(oldFeesInput.value) || 0;
+        const newFees = parseFloat(feesInput.value) || 0;
+        const balance = newFees - oldFees;
+        balanceInput.value = balance.toFixed(2);
+        console.log('new Fees',balance);
+    }
+        function UpdateFees(optionValue) {
+              console.log(optionValue);
+              <% if (typeof options !== 'undefined') { %>
+            <% for (var i = 0; i < options.length; i++) { %>
+                if ('<%= options[i].title %>' === optionValue) {
+                    console.log('<%= options[i].fees %>');
+                    var ffrrr = '<%= options[i].fees %>';
+                    console.log(typeof(ffrrr));
+                    feesInput.value = ffrrr
+                     calculateAndDisplayBalance();
+                    //  // Assuming feesInput is defined elsewhere
+                }
+            <% } %>
+        <% } %>
+    }
+    // function calculateAndDisplayBalance() {
+    //             const oldFees = parseFloat(oldFeesInput.value) || 0;
+    //             const newFees = parseFloat(feesInput.value) || 0;
+    //             const balance = newFees - oldFees;
+    //             balanceInput.value = balance.toFixed(2);
+    //         }
   function openPopup() {
     document.getElementById("popup").style.display = "block";
 }

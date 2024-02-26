@@ -1,7 +1,7 @@
 const express = require('express');
 const bp = require('body-parser');
 const app = express();
-const data = require('../database/database');
+const db = require('../database/database');
 require('../models/models')
 const {setLimit,dept_schema} = require('../models/models');
  const {setCourse} = require('../models/models');
@@ -11,12 +11,12 @@ const mongoose = require('mongoose');
 
 console.log(mongoose.modelNames());
 
-const feesMapping = {
-    'BA Tamil':11400, 'BA English':12400,'B Com':17400,'B Com CA':17400,'B Com PA':17400,'B Com BI':16400,'B Com BA':16400,'B Com IT':17400,'BBA':15400,'BSC Maths':12400,'BSC Physics':12400,'BSC CS':19400,'BSC IT':19400,'BSC CT':17400,'BCA':19400,'BSC IOT':17400,'BSC CS AIDS':17400,'BSC Physical Education':13400,'MA Tamil':12950,'MA English':12950,'M Com':12950,'MSC CS':12950,'MSC IT':12950,'MSC Physics':14950,'MSC Chemistry':15950,'MBA':28950,'PGDCA':6050,
-};
-const uidMiddleMapping = {
-    'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
-};
+// const feesMapping = {
+//     'BA Tamil':11400, 'BA English':12400,'B Com':17400,'B Com CA':17400,'B Com PA':17400,'B Com BI':16400,'B Com BA':16400,'B Com IT':17400,'BBA':15400,'BSC Maths':12400,'BSC Physics':12400,'BSC CS':19400,'BSC IT':19400,'BSC CT':17400,'BCA':19400,'BSC IOT':17400,'BSC CS AIDS':17400,'BSC Physical Education':13400,'MA Tamil':12950,'MA English':12950,'M Com':12950,'MSC CS':12950,'MSC IT':12950,'MSC Physics':14950,'MSC Chemistry':15950,'MBA':28950,'PGDCA':6050,
+// };
+// const uidMiddleMapping = {
+//     'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
+// };
 const option_val = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
     const MAX_DOCUMENTS_PER_COLLECTION  =  async (req,res)=>{
         const setting = await setLimit.find();
@@ -48,28 +48,39 @@ const saveDocument = async (document) => {
     }
 };
 exports.login=async(req,res)=>{
-    res.render('login',{layout:false})
+    res.render('login',{layout:false,ch:''})
 }
 exports.login_fill=async(req,res)=>{
+    console.log(req.body);
     const name=req.body.username;
     const pass=req.body.password;
-    const user=await login_data.findOne({name});
+    const user = await login_data.findOne({ name });
+    console.log('hello '+user);
     if (!user) {
-     res.render('login');
+     res.render('login',{layout:false,ch:'Invalid username'});
     }
-    if (name === 'admin') {
-        const setting = await setLimit.find();
-        console.log(setting);
-        res.render('admin',{layout:false});
-        return;
+    else if (user.name === 'admin') {
+        if (user.pass === pass) {
+            const setting = await setLimit.find();
+            const option = await setCourse.find()
+            console.log(setting);
+            res.render('admin', { layout: false,option });
+            return;
+        } 
+        else {
+            res.render('login',{layout:false,ch:'Wrong Password'});
+           }
     }
-    if (user.pass === pass) {
-        res.render('home');
-    } else {
-     res.send('invalide password');
+    else {
+        if (user.pass === pass) {
+            res.render('home');
+        }
+        else {
+            res.render('login', { layout: false,ch:'Wrong Password'})
+        }
+   
     }
-    
-}
+} 
 exports.sign_form=async(req,res)=>{
     res.render('singup',{layout:false});
 }
@@ -81,7 +92,7 @@ exports.signdata=async(req,res)=>{
     }
 const insert=await login_data.insertMany([data]);
 console.log(insert);
-res.render('login',{layout:false})
+res.render('login',{layout:false,ch:''})
 }
  exports.home = async(req,res)=>{
     res.render('home');
@@ -141,11 +152,14 @@ res.render('login',{layout:false})
 }
 
 exports.dept = async (req, res) => {
+    console.log('hello fhewf');
     const transformInputToCollectionName = (input) => {
         return input.toLowerCase().replace(/\s+/g, '_');
     };
     const currentYearLastTwoDigits = getCurrentYearLastTwoDigits();
+    
     const searchName = req.body.cname;
+    
     const collectionName = transformInputToCollectionName(searchName);
 
     // Dynamically access or define a collection based on the collectionName
@@ -160,7 +174,11 @@ exports.dept = async (req, res) => {
         }
 
         var total = currentDocumentCount + 1;
-        const middlePart = uidMiddleMapping[searchName];
+        const result = await setCourse.find({ title: searchName }, { key: 1, _id: false })
+        var middlePart = result[0].key;
+        console.log(middlePart);
+        // const middlePart = uidMiddleMapping[searchName];
+        console.log('middlepart',middlePart);
         var uid = `${currentYearLastTwoDigits}-${middlePart}-${total.toString().padStart(3, '0')}`;
 
         // Assuming you have the rest of your document fields ready to be saved
@@ -294,52 +312,65 @@ exports.transfer_admission = async (req, res) => {
 exports.searchAndDateFind = async (req, res) => {
     try {
         
-       const transformInputToCollectionName = (input) => {
-         return input.toLowerCase().replace(/\s+/g, '_');
-       }
+        const transformInputToCollectionName = (input) => {
+            console.log('inp',input);
+            return input.toLowerCase().replace(/\s+/g, '_');
+        }
         const dept = req.body.dept;
+        console.log('Deppp',dept);
         const collectionName = transformInputToCollectionName(dept);
+        console.log('cln',collectionName);
 
         let data = {
             number_of_entries: 0,
             number_of_entries_in_dept: 0,
             in_department_entries: [],
-            totalData: []
+            totalData: [],
+            fulldata: [],
         };
 
-        // Search by department
-        if (collectionName && mongoose.connection.modelNames().includes(collectionName)) {
-            const Model = mongoose.model(collectionName);
-            const totalData = await Model.find({}, { uid: 1, in_dept: 1, token: 1 });
+        try {
+            // 
+            if (collectionName) {
+                // mongoose.connection.modelNames().includes(collectionName)
+                console.log('vanakam da mapala');
+                 const Model = mongoose.model(collectionName,dept_schema);
+                console.log('rfr',Model);
+                const totalData = await Model.find({}, { uid: 1, in_dept: 1, token: 1,s_name:1});
+                console.log("fef",totalData);
 
-            let in_department_entries = [];
-            for (let i = 0; i < totalData.length; i++) {
-                if (totalData[i].in_dept === true) {
-                    in_department_entries.push(totalData[i]);
-                }
+                const in_department_entries = totalData.filter(entry => entry.in_dept === true);
+
+                data = {
+                    number_of_entries: totalData.length,
+                    number_of_entries_in_dept: in_department_entries.length,
+                    in_department_entries: in_department_entries,
+                    totalData: totalData
+                };
+
+            } else {
+                data.totalData = "No data available for selected course";
             }
+            const fitchdata= await setCourse.find({});
+            res.render('admission_reportResult', { fitchdata, data });
 
-            data = {
-                number_of_entries: totalData.length,
-                number_of_entries_in_dept: in_department_entries.length,
-                in_department_entries: in_department_entries,
-                totalData: totalData
-            };
-        } else {
-            data.totalData = "No data available for selected course";
         }
-        res.render('dept_cancel', { option_val, data});
-
-    }
     
- catch (error) {
-    console.error(error);
-    res.status(500);
+        catch (error) {
+            console.error(error);
+            res.status(500);
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500);
+    }
 }
-
 exports.report_date= async (req,res) =>{
-      const date=req.body.date;
-            var specificDate = new Date(date);
+    const date = req.body.date;
+    console.log('g',date);
+    var specificDate = new Date(date);
+    console.log("d",specificDate);
             var fulldata = [];
 
             const models = mongoose.modelNames();
@@ -348,10 +379,10 @@ exports.report_date= async (req,res) =>{
                 const modelData = await Model.find({ date: specificDate });
                 fulldata.push(...modelData);
             }
-            res.render('date_cancel', { option_val,fulldata,date});
+            res.render('admission_reportResult', { option_val,fulldata,date});
         
         }
-}
+
 
 
 exports.cancel_data = async (req, res) => {
@@ -386,8 +417,36 @@ exports.cancel_data = async (req, res) => {
 
 
 
-exports.admission_report=async(req,res)=>{
-    res.render('admission_report',{options:option_val});
+exports.admission_report = async (req, res) => {
+    const fitch = await setCourse.find({})
+    // const fitchdata = await setCourse.find({},{title:1,_id:0});
+   
+   
+    const ddd = [];
+    const darrs = await setCourse.find({}, { title: 1, _id: 0 });
+    
+    // Extract titles from the array of objects
+    const titles = darrs.map(item => item.title);
+    
+    console.log(titles);
+    
+    const transformInputToCollectionName = (input) => {
+        return input.toLowerCase().replace(/\s+/g, '_')
+    };
+    const transformedTitles = titles.map(transformInputToCollectionName);
+console.log(transformedTitles);
+   
+for (let title of titles) {
+    const collectionName = transformInputToCollectionName(title);
+    // Access the collection dynamically and retrieve all data
+    const collectionData = await mongoose.model(collectionName,dept_schema).find().count();
+    console.log(`Data for collection "${collectionName}":`, collectionData);
+}
+    
+
+
+  
+    res.render('admission_report', { options: fitch });
 }
   //--------------------------------------cancel UID---------------------------------------
 exports.cancel_uid = async(req,res)=>{
@@ -430,8 +489,10 @@ exports.update_uid = async (req,res)=>{
 
 }
 
-exports.cancel_reports = async(req,res)=>{
-    res.render('cancel_reports',{options:option_val});
+exports.cancel_reports = async (req, res) => {
+    const fitch = await setCourse.find({})
+
+    res.render('cancel_reports',{options:fitch});
 }
 
 exports.cancel_reports_date = async(req,res)=>{
@@ -445,6 +506,8 @@ exports.cancel_reports_dept = async(req,res)=>{
 exports.date_cancel_reports = async(req,res)=>{
     const date = req.body.date;
     const fullDate = [];
+
+    
     if(date){
         console.log(date);
         const models = mongoose.modelNames();
@@ -458,7 +521,7 @@ exports.date_cancel_reports = async(req,res)=>{
         console.log(fullDate);
 
     }
-    res.render('date_cancel',{fullDate,date})
+    res.render('dept_cancel',{fullDate,date})
 
 }
 exports.dept_cancel_reports = async (req, res) => {
@@ -497,12 +560,34 @@ exports.dept_cancel_reports = async (req, res) => {
             });
         }
         const options = option_val;
-        res.render('cancel_reports', { data, options, dept });
+        res.render('dept_cancel', { data, options, dept });
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");
     }
 };
-
+exports.updateAdmin = async (req, res) => {
+    
+    console.log(req.body.dept);
+    var depta = req.body.dept; // Make sure to declare depta with 'const' or 'let'
+    const upp = {
+        title: depta,
+        fees: req.body.fees,
+        key: req.body.key
+    };
+    const optionn = {
+        new: true
+    };
+    
+    try {
+        const updat_fff = await setCourse.findOneAndUpdate({ title: depta }, upp, optionn);
+        console.log('yvyhv', updat_fff);
+        const fitch = await setCourse.find()
+        res.render('admin',{layout:false,option:fitch})
+    } catch (error) {
+        console.error('Error occurred during findOneAndUpdate:', error);
+    }
+    
+}
 
 

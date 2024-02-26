@@ -1,0 +1,50 @@
+<% if (typeof fullDate != 'undefined') { %>
+    <% if (fullDate == 'no data') { %>
+        <br>
+        <h2>User not Found</h2>
+    <% } else { %>
+        <h2>No of Canceled Admission on <span><%= fullDate.date %></span>: <%= fullDate.length %></h2>
+        <table border="2" style="border-collapse: collapse;">
+            <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th>User Id</th>
+            </tr>
+            <% fullDate.forEach(function(item) { %>
+                <tr>
+                    <td><%= item ? item.s_name : "no name" %></td>
+                    <td><%= item ? item.cname : "no name" %></td>
+                    <td><%= item ? item.uid : "no name" %></td>
+                </tr>
+            <% }); %>
+        </table>
+    <% } %>
+<% } else { %>
+    <h2>Without data</h2>
+<% } %>
+<% if (typeof data != 'undefined' && typeof dept != 'undefined') { %>
+    <% if (data == 'no data') { %>
+        <br>
+        <h2>User not Found</h2>
+    <% } else { %>
+        <h2>No of Canceled Admission in <span><%= dept %></span>: <%= data.length %></h2>
+        <table border="2" style="border-collapse: collapse;">
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>User Id</th>
+            </tr>
+            <% data.forEach(function(item) { %>
+                <tr>
+                    <td><%= item ? item.date : "no date" %></td>
+                    <td><%= item ? item.s_name : "no name" %></td>
+                    <td><%= item ? item.cname : "no name" %></td>
+                    <td><%= item ? item.uid : "no name" %></td>
+                </tr>
+            <% }); %>
+        </table>
+    <% } %>
+<% } else { %>
+    <h2>Without data</h2>
+<% } %>

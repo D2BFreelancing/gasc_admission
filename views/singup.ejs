@@ -1,18 +1,23 @@
-<h2>Sign up form</h2>
-<title>GASC ADMISSION</title>
-<form action="/signup_data" method="POST">
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+    <div class="container">
+    <div class="form-container">
+        <form action="/signup_data" method="POST">
+            <h1>Signin Your Account</h1><br>
+            <span>Admin Olny</span>
+            <input type="text" id="username" name="username" required placeholder="user name">
+            <input type="password" id="password" name="password" required placeholder="password">
+            <input type="password" id="cpassword" name="cpassword" required  placeholder="Confirm Password">
+            <button type="submit">Sign UP</button>            
+        </form>
     </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
     </div>
-    
-    <div>
-        <label for="cpassword">conform Password:</label>
-        <input type="password" id="cpassword" name="cpassword" required><br><br>
-    </div>
-    <button type="submit">Submit</button>
-</form>
+</body>
+</html>
