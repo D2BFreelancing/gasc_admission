@@ -62,10 +62,7 @@ exports.login_fill=async(req,res)=>{
     const pass=req.body.password;
     const user = await login_data.findOne({ name });
     console.log('hello '+user);
-    const user = await login_data.findOne({ name });
-    console.log('hello '+user);
     if (!user) {
-     res.render('login',{layout:false,ch:'Invalid username'});
      res.render('login',{layout:false,ch:'Invalid username'});
     }
     else if (user.name === 'admin') {
@@ -365,22 +362,16 @@ exports.searchAndDateFind = async (req, res) => {
             res.render('admission_reportResult', { fitchdata, data });
 
         }
-        }
+        
     
         catch (error) {
             console.error(error);
             res.status(500);
         }
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500);
-    }
-}
-        catch (error) {
-            console.error(error);
-            res.status(500);
-        }
+
+
+
+      
     }
     catch (error) {
         console.error(error);
