@@ -2,9 +2,9 @@
 
 <link rel="stylesheet" href="/css/ad_report.css">
 <div class="main">
-    <div class="search_option">
+    <div>
         <% if (typeof options !== 'undefined' && options.length > 0) { %>
-            <form action="/report_dept" method="post">    
+            <form action="/report_dept" method="post"  class="search_option">    
                 <div class="dept_search">
                         <h2>Course Selection</h2>
                         <select name="dept">

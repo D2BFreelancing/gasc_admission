@@ -29,6 +29,11 @@ const option_val = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA',
     }
 
 
+    exports.home=async(req,res)=>{
+        res.redirect('home');
+    }
+
+
 exports.update_limit = async (req,res)=>{
     const newLimit = req.body.newLimit;
     if (newLimit && !isNaN(newLimit)) {
@@ -49,6 +54,7 @@ const saveDocument = async (document) => {
 };
 exports.login=async(req,res)=>{
     res.render('login',{layout:false,ch:''})
+    res.render('login',{layout:false,ch:''})
 }
 exports.login_fill=async(req,res)=>{
     console.log(req.body);
@@ -56,7 +62,10 @@ exports.login_fill=async(req,res)=>{
     const pass=req.body.password;
     const user = await login_data.findOne({ name });
     console.log('hello '+user);
+    const user = await login_data.findOne({ name });
+    console.log('hello '+user);
     if (!user) {
+     res.render('login',{layout:false,ch:'Invalid username'});
      res.render('login',{layout:false,ch:'Invalid username'});
     }
     else if (user.name === 'admin') {
@@ -293,6 +302,7 @@ exports.transfer_admission = async (req, res) => {
             s_name: req.body.s_name,
             uid: req.body.uid,
             fees: req.body.new_fees,
+            fees: req.body.new_fees,
             in_dept:true,
             cancel:false
         });
@@ -355,7 +365,18 @@ exports.searchAndDateFind = async (req, res) => {
             res.render('admission_reportResult', { fitchdata, data });
 
         }
+        }
     
+        catch (error) {
+            console.error(error);
+            res.status(500);
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500);
+    }
+}
         catch (error) {
             console.error(error);
             res.status(500);
@@ -407,7 +428,7 @@ exports.cancel_data = async (req, res) => {
             console.log(fulldata);
         }
 
-       return res.render('dept_cancel', { option_val,fulldata,date});
+       return res.render('admission_reports', { option_val,fulldata,date});
 
     } catch (err) {
         console.log(err);
@@ -448,6 +469,15 @@ for (let title of titles) {
   
     res.render('admission_report', { options: fitch });
 }
+
+
+
+
+
+
+
+
+
   //--------------------------------------cancel UID---------------------------------------
 exports.cancel_uid = async(req,res)=>{
     const fetch=req.body.uid;

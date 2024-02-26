@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Details</title>
+    <link rel="stylesheet" href="./css/report.css">
+</head>
+<body>
+    <h1>Report Details</h1>
+    <button><a href="/cancel_reports">Cancel Reports</a></button>
+    <% if (typeof options !== 'undefined' && options.length > 0) { %>
+        <div class="dept_search">
+            <form action="/report_dept" method="post">
+                <h2>Course Selection</h2>
+                <select name="dept">
+                    <% options.forEach(function(option) { %>
+                        <option value="<%= option %>"><%= option %></option>
+                    <% }); %>
+                </select>
+            <button type="submit">search</button>
+        </div>
+
+    <div class="date_search">
+        <h2>Date selection</h2> 
+        <input type="date" name="date" id="date">
+        <button type="submit">Search</button>
+    </div>
+
+    </form>
+    <% } %>
+
+    <% if (typeof data !== 'undefined') { %>
+        <% if (data.totalData === "No data available for selected course") { %>
+            <div>
+                <h2><%= data.totalData %></h2>
+            </div>
+        <% } else { %>
+            <div>
+                <h2>Report Summary</h2>
+                <p>Number of Entries: <%= data.number_of_entries %></p>
+                <p>Number of Entries in Department: <%= data.number_of_entries_in_dept %></p>
+            </div>
+            <div>
+                <h2>Details of Entries in Department</h2>
+                <ul>
+                    <% data.in_department_entries.forEach(function(entry) { %>
+                        <li>UID: <%= entry.uid %>, Token: <%= entry.token %></li>
+                    <% }); %>
+                </ul>
+            </div>
+            <div>
+                <h2>All Entries</h2>
+                <ul>
+                    <% data.totalData.forEach(function(entry) { %>
+                        <li>UID: <%= entry.uid %>, Token: <%= entry.token %>, In Department: <%= entry.in_dept %></li>
+                    <% }); %>
+                </ul>
+            </div>
+        <% } %>
+    <% } %>
+
+    <div class="date"> 
+        <% if (typeof fulldata !== 'undefined') { %>
+            <% if (fulldata === 'no data') { %>
+                <br>
+                <h2>User not Found</h2>
+            <% } else { %>
+                <p><%=date ?date  :"no date" %></p>
+                <p>Number of Entries: <%= fulldata.length %></p>
+                <table border="2" style="border-collapse: collapse;">
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>User Id</th>
+                        <!-- <th>Options</th> -->
+                    </tr>
+                    <% fulldata.forEach(item => { %>
+                        <tr>
+                            <td><%= item.s_name ? item.s_name : "no name" %></td>
+                            <td><%= item.cname ? item.cname : "no name" %></td>
+                            <td><%= item.uid ? item.uid : "no name" %></td>
+                            <!-- <td><button><a href="#">view</a></button></td> -->
+                        </tr>
+                    <% }); %>
+                </table>
+            <% } %>
+        <% } else { %>
+            <h2>Without data</h2>
+        <% } %>
+    </div>
+</body>
+</html>

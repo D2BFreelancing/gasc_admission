@@ -1,6 +1,9 @@
 <link rel="stylesheet" href="./css/transfer.css">
 <h2 class="heading">Transfer Admission</h2>
 <div class="search">
+<link rel="stylesheet" href="./css/transfer.css">
+<h2 class="heading">Transfer Admission</h2>
+<div class="search">
 <form action="/get_uid_details" method="post" id="uidSearchForm">
   <label for="uid">Search UID</label>
   <input type="text" name="uid" id="uid" class="search_box">
@@ -23,6 +26,38 @@
 
 <div class="form_sec">  
   <form action="/transfer-submit" method="post" class="Form">
+    <div class="form_container">
+              <div class="form_div">
+                <label for="">Date</label>
+                <input type="date" id="date" name="date" class="rectangle-2">
+              </div>
+              <div class="form_div">
+                <label for="">User ID</label>
+                <input type="text" id="UID" class="rectangle-3" placeholder="UID" name="uid" value="<%= data ? data.uid : '' %>" readonly><br>
+              </div>
+              <div class="form_div">
+                <label for="">Student Name</label>
+                <input type="text" id="s_name" class="rectangle-6" placeholder="Student Name" name="s_name" value="<%= data ? data.s_name : '' %>" readonly>
+              </div>
+              <div class="form_div">
+                <label for="">Old Course</label>
+                <input type="text" id="oldcname" name="o_cname" value="<%= data ? data.cname : '' %>"  placeholder="Old Course" readonly><br>
+              </div>
+              <div class="form_div">
+                <div class="flex-row-c">
+                  <div class="search-container">
+                    <label for="New course">New&nbsp;Course</label>
+                    <input type="text" id="searchInput" placeholder="Search..." class="rectangle-3" name="cname" value="<%= data ? data.change : '' %>">
+                    <select id="mySelect" class="rectangle-4" onchange="UpdateFees(this.value)">
+                      <option value="default" selected disabled hidden>Choose a course...</option>
+                      <% if (typeof options !== 'undefined') { %>
+                          <% options.forEach(function(option) { %>
+                              <option value="<%= option.title %>"><%= option.title %></option>
+                          <% }); %>
+                      <% } %>
+                  </select>
+                  
+                  </div>
     <div class="form_container">
               <div class="form_div">
                 <label for="">Date</label>
