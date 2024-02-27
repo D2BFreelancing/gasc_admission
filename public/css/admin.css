@@ -2,8 +2,24 @@ body{
     margin: 0;
     padding: 0;
     box-sizing: border-box;   
-    background: linear-gradient(28deg, #f7ffe9 50%, #4cff96 50%);
+    background: linear-gradient(28deg, #ffffff 50%, #a3ebc1 50%);
     height: 100vh;
+}
+
+.home{
+    align-items: end;
+    text-align: right;
+    justify-content: right ;
+    margin-right: 20px;
+    margin-top: 10px;
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.home a{
+    text-decoration: none;
+    color: white;
+    text-shadow: 2px 2px 3px black;
 }
 
 .links{
@@ -25,7 +41,7 @@ body{
     margin-left:25%;
     border-radius: 10px;
     padding-top: 30px;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 .limit form label{
@@ -67,7 +83,7 @@ body{
     outline: none;
     border: none;
     border-radius: 10px;
-    background-color:rgb(212, 255, 203);
+    background-color:rgb(245, 255, 243);
     border-bottom: 2px solid rgb(119, 119, 199);
     font-size: 17px;
 }
@@ -81,7 +97,7 @@ body{
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.5rem;
-    margin-left: 21%;
+    margin-left: 24%;
     background-color: rgb(255, 255, 255);
     width: 800px;
     height: 60vh;
@@ -133,4 +149,96 @@ button:active{
 
 .link a:hover{
     color: black;
+}
+
+/* ----------------------------------------popup--------------------------------- */
+  /* Popup container */
+  .popup {
+    display: flex;
+    position: fixed; 
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 60px; /* 60px from the top */
+}
+
+/* Popup content */
+.popup-content {
+    background-color: #ffffff;
+    margin: 5% auto; /* 5% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+    height:50vh;
+    border-radius: 15px; /* Could be more or less, depending on screen size */
+    box-shadow: #055a2f 0px 7px 29px 0px;
+}
+
+.popup-content h2{
+    text-align: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.popup-content h1{
+    text-align: center;
+    color: #790e0e;
+}
+
+.popup-content p{
+    font-size: 20px;
+    font-weight: 900;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: rgb(0, 0, 0);
+    padding-top: 5px;
+    padding-left: 190px;
+}
+
+/* Close button */
+.close {
+    color: #000000;
+    float: right;
+    font-size: 38px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: rgb(255, 0, 0);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.for{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+}
+
+
+.sele{
+    margin-left: 17px;
+}
+
+.drop{
+    padding: 10px;
+    margin-left: 17px;
+    width: 550px;
+    border-radius: 10px;
+    padding: 10px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    background-color:rgb(245, 255, 243);
+    border-bottom: 2px solid rgb(119, 119, 199);
+    font-size: 12px;
+}
+
+.update{
+    text-shadow: 2px 2px 3px black;     
 }

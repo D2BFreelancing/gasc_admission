@@ -1,18 +1,16 @@
 <link rel="stylesheet" href="/css/ad_report.css">
 <div class="main">
+    <h2 class="count">Total No of Cancel Adminssion:<%= count %></h2>
     <div class="search_option">
-<form action="/date_cancel_reports" method="post">
+    <form action="/date_cancel_reports" method="post">
     <div class="date_search">
         <h2 for="dept">Date</h2>
     <input type="date" id="date" name="date">
     <button type="submit">Get Report</button>
 </div>
-</form>
+    </form>
 
-
-
-
-<form action="/dept_cancel_reports" method="post">
+    <form action="/dept_cancel_reports" method="post">
     <div class="dept_search">
     <h2 for="dept">Select Course:</h2>
     <select name="dept" id="dept">
@@ -23,6 +21,6 @@
     </select>
     <button type="submit">Search</button>
     </div>
-</form>
-</div>
+    </form>
+    </div>
 </div>

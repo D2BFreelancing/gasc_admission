@@ -16,8 +16,8 @@
                         <div class="search-container">
                           <label for="searchInput">Course</label>
                           <input type="text" id="searchInput" placeholder="&nbsp;&nbsp;&nbsp;Search..." class="rectangle-3" name="cname" required>
-                          <select id="mySelect" class="rectangle-4" onchange="updateFees(this.value)">
-                            <option value="default" selected disabled hidden>Choose a course...</option>
+                          <select id="mySelect" class="rectangle-4" onchange="updateFees(this.value)" required>
+                            <option value="default" selected disabled >Choose a course...</option>
                             <% if (fitchdata && fitchdata.length > 0) { %>
                               <% for(var i=0; i < fitchdata.length; i++) { %>
                                 <option value="<%= fitchdata[i].key %>"><%= fitchdata[i].title %></option>

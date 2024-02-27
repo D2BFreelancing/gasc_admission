@@ -163,3 +163,7 @@ button:active{
     box-shadow: #dc2019 0px 7px 29px 0px;
     /* transform: translateY(10px); */
 }
+
+.log{
+    padding-top: 20px;
+}

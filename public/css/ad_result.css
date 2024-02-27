@@ -1,0 +1,41 @@
+
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;   
+    height: 100vh;
+}
+table,th,td{
+    border: 1px solid;
+    padding: 10px;
+    
+}
+
+
+tr:nth-child(even) {background-color: #ffffff;}
+
+tr:nth-child(odd) {background-color: #d4ffdc;}
+
+table th{
+    background-color: rgb(76, 255, 109);
+}
+
+ 
+table{
+    margin-top: 20px;
+    margin-left: 70px;
+    margin-right: 70px;
+    border-collapse: collapse;
+    padding: 10px;
+
+}
+
+.date_main{
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+}
+.total{
+    margin-top: 20px;
+    text-align: center;
+}

@@ -51,7 +51,8 @@ router.post('/update_limit', controller.update_limit)
 
 
 
-router.post('/updateAdmin',controller.updateAdmin)
+router.post('/updateAdmin', controller.updateAdmin)
+// router.get('/exc',controller.excel)
 
 
 module.exports = router;

@@ -1,12 +1,13 @@
-
+<link rel="stylesheet" href="/css/ad_result.css">
  <!-- date cancel -->
-
+ <div class="main">
 <% if (typeof fullDate != 'undefined') { %>
     <% if (fullDate == 'no data') { %>
       <br>
       <h2>User not Found</h2>
     <% } else { %>
-      <h2>No of Canceled Admission on <span><%= fullDate.date %></span>:<%= fullDate.length %></h2>
+      <div class="date_main">
+      <h2 class="total">No of Canceled Admission on <span><%= fullDate.date %></span>:<%= fullDate.length %></h2>
       <table border="2" style="border-collapse: collapse;">
         <tr>
           <th>Name</th>
@@ -21,6 +22,7 @@
           </tr>
         <% }); %>
       </table>
+    </div>
     <% } %>
   <% } else { %>
     <!-- <h2>Without data</h2> -->
@@ -33,9 +35,9 @@
         <br>
         <h2>User not Found</h2>
     <% } else { %>
-        <p><%= date ? date : "no date" %></p>
-        <p>Number of Entries: <%= fulldata.length %></p>
-        <table border="2" style="border-collapse: collapse;">
+        <h2 class="total">No of Cancel Admission in this Department: <%= fulldata.length %></h2>
+        <div class="date_main">
+        <table>
             <tr>
                 <th>Name</th>
                 <th>Department</th>
@@ -51,6 +53,7 @@
                 </tr>
             <% }) %>
         </table>
+      </div>
     <% } %>
   <% } else { %>
     <br>

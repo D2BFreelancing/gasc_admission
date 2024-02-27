@@ -1,6 +1,8 @@
 const express = require('express');
 const bp = require('body-parser');
 const app = express();
+const xlsx = require('xlsx');
+const fs = require('fs');
 const db = require('../database/database');
 require('../models/models')
 const {setLimit,dept_schema} = require('../models/models');
@@ -390,7 +392,9 @@ exports.report_date= async (req,res) =>{
                 const Model = mongoose.model(modelName);
                 const modelData = await Model.find({ date: specificDate });
                 fulldata.push(...modelData);
+                
             }
+            
             res.render('admission_reportResult', { option_val,fulldata,date});
         
         }
@@ -433,8 +437,8 @@ exports.admission_report = async (req, res) => {
     const fitch = await setCourse.find({})
     // const fitchdata = await setCourse.find({},{title:1,_id:0});
    
-   
-    const ddd = [];
+
+    var ddd = 0;
     const darrs = await setCourse.find({}, { title: 1, _id: 0 });
     
     // Extract titles from the array of objects
@@ -451,14 +455,16 @@ console.log(transformedTitles);
 for (let title of titles) {
     const collectionName = transformInputToCollectionName(title);
     // Access the collection dynamically and retrieve all data
-    const collectionData = await mongoose.model(collectionName,dept_schema).find().count();
+    const collectionData = await mongoose.model(collectionName, dept_schema).find({cancel:false}).count();
     console.log(`Data for collection "${collectionName}":`, collectionData);
+    ddd = collectionData+ddd
+    console.log(typeof(ddd));
 }
-    
+    console.log(ddd);
 
 
   
-    res.render('admission_report', { options: fitch });
+    res.render('admission_report', { options: fitch,count: ddd });
 }
 
 
@@ -513,7 +519,33 @@ exports.update_uid = async (req,res)=>{
 exports.cancel_reports = async (req, res) => {
     const fitch = await setCourse.find({})
 
-    res.render('cancel_reports',{options:fitch});
+
+
+
+    var ddd = 0;
+    const darrs = await setCourse.find({}, { title: 1, _id: 0 });
+    
+    // Extract titles from the array of objects
+    const titles = darrs.map(item => item.title);
+    
+    console.log(titles);
+    
+    const transformInputToCollectionName = (input) => {
+        return input.toLowerCase().replace(/\s+/g, '_')
+    };
+    const transformedTitles = titles.map(transformInputToCollectionName);
+console.log(transformedTitles);
+   
+for (let title of titles) {
+    const collectionName = transformInputToCollectionName(title);
+    // Access the collection dynamically and retrieve all data
+    const collectionData = await mongoose.model(collectionName, dept_schema).find({cancel:true}).count();
+    console.log(`Data for collection "${collectionName}":`, collectionData);
+    ddd = collectionData+ddd
+    console.log(typeof(ddd));
+}
+    console.log(ddd);
+    res.render('cancel_reports',{options:fitch,count:ddd});
 }
 
 exports.cancel_reports_date = async(req,res)=>{
@@ -564,10 +596,11 @@ exports.dept_cancel_reports = async (req, res) => {
         // Extract department from request body or query
         const { dept } = req.body; // or req.query for GET requests
         const collectionName = transformInputToCollectionName(dept);
+        console.log(collectionName);
 
         let data = [];
-        if (collectionName && mongoose.connection.modelNames().includes(collectionName)) {
-            const Model = mongoose.model(collectionName);
+        if (collectionName) {
+            const Model = mongoose.model(collectionName,dept_schema);
             const totalData = await Model.find({ cancel: true });
 
             // Format date and add cname for each item
@@ -580,8 +613,9 @@ exports.dept_cancel_reports = async (req, res) => {
                 data.push(formattedItem);
             });
         }
-        const options = option_val;
-        res.render('dept_cancel', { data, options, dept });
+        const fitch = await setCourse.find();
+        const options = fitch;
+        res.render('dept_cancel', { fulldata:data, options, dept });
     } catch (error) {
         console.error(error);
         res.status(500).send("Server error");
@@ -611,4 +645,57 @@ exports.updateAdmin = async (req, res) => {
     
 }
 
+// Converting data into Excel sheet
+
+
+// const excelFileName = 'Admission.xlsx';
+
+// // Create a new workbook
+// const workbook = xlsx.utils.book_new();
+
+// var coo = 4;
+// exports.excel = async (req, res) => {
+//     var ddd = 0;
+//     var daa = [];
+//     const darrs = await setCourse.find({}, { title: 1, _id: 0 });
+    
+//     // Extract titles from the array of objects
+//     const titles = darrs.map(item => item.title);
+    
+//     console.log(titles);
+    
+//     const transformInputToCollectionName = (input) => {
+//         return input.toLowerCase().replace(/\s+/g, '_')
+//     };
+//     const transformedTitles = titles.map(transformInputToCollectionName);
+// console.log(transformedTitles);
+   
+//     for (let title of titles) {
+//         const collectionName = transformInputToCollectionName(title);
+//         // Access the collection dynamically and retrieve all data
+//         const collectionData = await mongoose.model(collectionName, dept_schema).find({ cancel: false })
+//         console.log(`Data for collection "${collectionName}":`, collectionData);
+//         daa.push(...collectionData)
+//         console.log(daa);
+//         const worksheet = xlsx.utils.json_to_sheet(daa)
+
+
+
+//         xlsx.utils.book_append_sheet(workbook, worksheet, coo);
+//         coo = coo + 1;
+//         console.log('cccc',coo);
+
+//         // Write workbook to a file
+//         xlsx.writeFile(workbook, excelFileName, { bookType: 'xlsx', type: 'file' });
+
+//         console.log(`Data exported to ${excelFileName}`);
+//         // ddd = collectionData+ddd
+//         //     console.log(typeof(ddd));
+//     }
+// //     console.log(ddd);
+
+//     // File Name for Excel
+
+
+// }
 

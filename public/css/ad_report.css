@@ -13,7 +13,7 @@ body{
     display: flex;
     gap: 5rem;
     margin-top: 100px;
-    padding-left: 150px;
+    padding-left: 15%;
 }
 
 .dept_search{
@@ -95,4 +95,9 @@ button:active{
     color: white;
     box-shadow: #dc2019 0px 7px 29px 0px;
     transform: translateY(10px);
+}
+
+.count{
+    margin-top: 20px;
+    text-align: center;
 }
