@@ -1,0 +1,29 @@
+<% if (typeof fulldata !== 'undefined') { %>
+    <% if (fulldata.length === 0) { %>
+        <br>
+        <h2>User not Found</h2>
+    <% } else { %>
+        <p><%= date ? date : "no date" %></p>
+        <p>Number of Entries: <%= fulldata.length %></p>
+        <table border="2" style="border-collapse: collapse;">
+            <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th>User Id</th>
+                <!-- <th>Options</th> -->
+            </tr>
+            <% fulldata.forEach(item => { %>
+                <tr>
+                    <td><%= item.s_name ? item.s_name : "no name" %></td>
+                    <td><%= item.cname ? item.cname : "no name" %></td>
+                    <td><%= item.uid ? item.uid : "no name" %></td>
+                    <!-- <td><button><a href="#">view</a></button></td> -->
+                </tr>
+            <% }) %>
+        </table>
+    <% } %>
+  <% } else { %>
+    <br>
+    <h2>User not Found</h2>
+  <% } %>
+  

@@ -504,5 +504,66 @@ exports.dept_cancel_reports = async (req, res) => {
     }
 };
 
+exports.date_admission_reports = async(req,res)=>{
+    const date = req.body.date;
+    const fullDate = [];
+    if(date){
+        console.log(date);
+        const models = mongoose.modelNames();
+        for(const model of models){
+            const collection = mongoose.model(model);
+            const modelDate =await collection.find({date:date,cancel:true});
+            fullDate.push(...modelDate);
+        }
+
+        fullDate.date=date;
+        console.log(fullDate);
+
+    }
+    res.render('date_cancel',{fullDate,date})
+
+}
+exports.dept_admission_report = async (req, res) => {
+    try {
+        // Function to transform department input into a collection name
+        const transformInputToCollectionName = (input) => {
+            return input.toLowerCase().replace(/\s+/g, '_');
+        };
+
+        // Function to format dates
+        const formatDate = (date) => {
+            const d = new Date(date);
+            const day = ('0' + d.getDate()).slice(-2);
+            const month = ('0' + (d.getMonth() + 1)).slice(-2);
+            const year = d.getFullYear();
+            return `${year}-${month}-${day}`;
+        };
+
+        // Extract department from request body or query
+        const { dept } = req.body; // or req.query for GET requests
+        const collectionName = transformInputToCollectionName(dept);
+
+        let data = [];
+        if (collectionName && mongoose.connection.modelNames().includes(collectionName)) {
+            const Model = mongoose.model(collectionName);
+            const totalData = await Model.find({ cancel: true });
+
+            // Format date and add cname for each item
+            totalData.forEach(item => {
+                const formattedItem = {
+                    ...item._doc,
+                    date: formatDate(item.date),
+                    cname: dept
+                };
+                data.push(formattedItem);
+            });
+        }
+        const options = option_val;
+        res.render('cancel_reports', { data, options, dept });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+};
 
 
