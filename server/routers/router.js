@@ -25,7 +25,8 @@ router.post('/transfer-submit',controller.transfer_admission);
 
 router.post('/add_course',controller.courseAdd)
 
-router.post('/report_dept',controller.searchAndDateFind);
+router.post('/report_dept', controller.searchAndDateFind);
+router.post('/report_date',controller.report_date)
 
 
 
@@ -41,7 +42,14 @@ router.get('/cancel_reports_dept',controller.cancel_reports_dept);
 router.post('/date_cancel_reports',controller.date_cancel_reports);
 router.post('/dept_cancel_reports',controller.dept_cancel_reports);
 
-router.post('/update_limit',controller.update_limit)
+// admin router
+// router.get('/admin',controller.admin);
+router.post('/update_limit', controller.update_limit)
+
+
+
+router.post('/updateAdmin', controller.updateAdmin)
+// router.get('/exc',controller.excel)
 
 
 router.post('/date_admission_reports',controller.date_admission_reports);

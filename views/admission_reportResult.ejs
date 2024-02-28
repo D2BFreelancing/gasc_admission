@@ -1,0 +1,65 @@
+<!-- Admission Report after Search page -->
+<link rel="stylesheet" href="/css/ad_result.css">
+    <div class="search">
+    <% if (typeof data !== 'undefined') { %>
+        <% if (data.totalData === "No data available for selected course") { %>
+            <div>
+                <h2><%= data.totalData %></h2>
+            </div>
+        <% } else { %>
+        <div class="date_main">
+                <h2 class="total">Total Admission: <%= data.number_of_entries %></h2>
+                <h2 class="total">current count in Department: <%= data.number_of_entries_in_dept %></h2>
+                <table>                
+                    <tr>                        
+                            <th>UID</th>
+                            <th>Name</th>                                 
+                            <th>Token</th>
+                            <th>IN Department</th>                   
+                    </tr>
+                    <% data.totalData.forEach(function(entry) { %>                        
+                    <tr>
+                         <td><%= entry.uid %></td>
+                         <td><%= entry.s_name %></td>
+                         <td><%= entry.token %></td> 
+                         <td><%= entry.in_dept %> </td>
+                         
+                    </tr>                       
+                    <% }); %>                
+                </table>
+        <% } %>
+    <% } %>
+        </div>
+    <div class="date"> 
+    <% if (typeof fulldata !== 'undefined') { %>
+        <% if (fulldata === 'no data') { %>
+            <br>
+            <h2>User not Found</h2>
+        <% } else { %>
+            <div class="date_main">
+            <h2 class="total">No of Admission in (<%=date ?date  :"no date" %>): <%= fulldata.length %></h2>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>User Id</th>
+                    <th>Token</th>
+                    <!-- <th>Options</th> -->
+                </tr>
+                <% fulldata.forEach(item => { %>
+                    <tr>
+                        <td><%= item.s_name ? item.s_name : "no name" %></td>
+                        <td><%= item.cname ? item.cname : "no name" %></td>
+                        <td><%= item.uid ? item.uid : "no name" %></td>
+                        <td><%= item.token ? item.token : " " %></td>
+                        <!-- <td><button><a href="#">view</a></button></td> -->
+                    </tr>
+                <% }); %>
+            </table>
+        </div>
+        <% } %>
+    <% } else { %>
+        <!-- <h2>Without data</h2>  -->
+    <% } %>
+    </div>
+</div>

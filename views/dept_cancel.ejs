@@ -1,28 +1,62 @@
-<% if (typeof fulldata !== 'undefined') { %>
-  <% if (fulldata.length === 0) { %>
+<link rel="stylesheet" href="/css/ad_result.css">
+ <!-- date cancel -->
+ <div class="main">
+<% if (typeof fullDate != 'undefined') { %>
+    <% if (fullDate == 'no data') { %>
       <br>
       <h2>User not Found</h2>
-  <% } else { %>
-      <p><%= date ? date : "no date" %></p>
-      <p>Number of Entries: <%= fulldata.length %></p>
+    <% } else { %>
+      <div class="date_main">
+      <h2 class="total">No of Canceled Admission on <span><%= fullDate.date %></span>:<%= fullDate.length %></h2>
       <table border="2" style="border-collapse: collapse;">
+        <tr>
+          <th>Name</th>
+          <th>Department</th>
+          <th>User Id</th>
+        </tr>
+        <% fullDate.forEach(function(item) { %>
           <tr>
-              <th>Name</th>
-              <th>Department</th>
-              <th>User Id</th>
-              <!-- <th>Options</th> -->
+            <td><%= item ? item.s_name : "no name" %></td>
+            <td><%= item ? item.cname : "no name" %></td>
+            <td><%= item ? item.uid : "no name" %></td>
           </tr>
-          <% fulldata.forEach(item => { %>
-              <tr>
-                  <td><%= item.s_name ? item.s_name : "no name" %></td>
-                  <td><%= item.cname ? item.cname : "no name" %></td>
-                  <td><%= item.uid ? item.uid : "no name" %></td>
-                  <!-- <td><button><a href="#">view</a></button></td> -->
-              </tr>
-          <% }) %>
+        <% }); %>
       </table>
+    </div>
+    <% } %>
+  <% } else { %>
+    <!-- <h2>Without data</h2> -->
   <% } %>
-<% } else { %>
-  <br>
-  <h2>User not Found</h2>
-<% } %>
+
+
+   <!-- dept cancel -->
+  <% if (typeof fulldata !== 'undefined') { %>
+    <% if (fulldata.length === 0) { %>
+        <br>
+        <h2>User not Found</h2>
+    <% } else { %>
+        <h2 class="total">No of Cancel Admission in this Department: <%= fulldata.length %></h2>
+        <div class="date_main">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th>User Id</th>
+                <!-- <th>Options</th> -->
+            </tr>
+            <% fulldata.forEach(item => { %>
+                <tr>
+                    <td><%= item.s_name ? item.s_name : "no name" %></td>
+                    <td><%= item.cname ? item.cname : "no name" %></td>
+                    <td><%= item.uid ? item.uid : "no name" %></td>
+                    <!-- <td><button><a href="#">view</a></button></td> -->
+                </tr>
+            <% }) %>
+        </table>
+      </div>
+    <% } %>
+  <% } else { %>
+    <br>
+    <!-- <h2>User not Found</h2> -->
+  <% } %>
+  

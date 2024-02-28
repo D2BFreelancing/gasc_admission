@@ -1,21 +1,79 @@
-
+<link rel="stylesheet" href="/css/admin.css">
+<div class="admin_main">
+    <div class="home">
+<a href="/home"><button>Home</button></a>
+<a href="/sign_up"><button>Add New User</button></a>
+<button onclick="openPopup();" class="update">Update  Course Information</button>
+</div>
+<div class="limit">
 <form action="/update_limit" method="POST">
     <label for="newLimit">New Limit:</label>
     <input type="number" id="newLimit" name="newLimit" required >
     <button type="submit">Update Limit</button>
 </form>
-    
-<h1>Admin page</h1>
-<form action="/add_course" method="post">
-    <label for="course">Course Title:</label>
-    <input type="text" name="course" id="courseTitle" required>
-
-    <label for="fees">Fees:</label>
-    <input type="text" name="fees" id="fees" required>
-
+</div>
+<div class="ad_course">
+<form action="/add_course" method="post" class="forms">
+    <span class="add">Add Course & Fees</span>
+    <div class="form_div">
+        <label for="course">Course Title:</label>
+        <input type="text" name="course" id="courseTitle" required>
+    </div>
+    <div class="form_div">
+        <label for="fees">Fees:</label>
+        <input type="text" name="fees" id="fees" required>
+    </div>
+    <div class="form_div">
     <label for="key">Course Key:</label>
     <input type="text" name="key" id="key" required>
-
-    <input type="submit" value="Submit">
+    </div>
+    <div class="form_div">
+        <button type="submit" class="btn">Submit</button>
+    </div>
 </form>
-<a href="/sign_up">Add New User</a>
+</div>
+<div id="updae">
+<% if (typeof option !== 'undefined' && option.length > 0) { %>
+    <div id="popup" class="popup">
+        <!-- Popup content -->
+        <div class="popup-content">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <form action="/updateAdmin" method="post" class="for">
+            <h2>Update Course</h2>
+            <label for="course" class="sele">Course Title:</label>
+            <select name="dept" class="drop down"> 
+                <option value="default" selected disabled hidden>Choose a course...</option>
+                <% option.forEach(function(option) { %>
+                    <option value="<%= option.title %>"><%= option.title %></option>
+                <% }); %>
+            </select>
+            <% } %>
+            <div class="form_div">
+                <label for="fees">Fees:</label>
+                <input type="text" name="fees" id="fees" required>
+            </div>
+            <div class="form_div">
+                <label for="key">Course Key:</label>
+                <input type="text" name="key" id="key" required>
+            </div>
+            <div class="form_div">
+                <button type="submit" class="btn">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    document.getElementById( "updae" ).style.display = 'none';
+    function openPopup() {
+    // document.getElementById("popup").style.display = "block";
+    // document.getElementById("overlay").style.display = "block";
+    document.getElementById( "updae" ).style.display = 'block';
+  }
+
+    function closePopup() {
+            document.getElementById("updae").style.display = "none";
+        }
+  
+</script>

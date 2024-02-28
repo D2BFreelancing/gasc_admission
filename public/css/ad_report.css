@@ -2,24 +2,102 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
+  }
 
 body{
     background: linear-gradient(25deg, #f3ffe0 50%, #adffcf 50%);
     height: 100vh;
 }
 
-.main{
-    background-color: blue;
+.search_option{
     display: flex;
+    gap: 5rem;
+    margin-top: 100px;
+    padding-left: 15%;
 }
 
 .dept_search{
-    background-color: rgb(178, 178, 211);
+    background-color: white;
+    border-radius: 15px;
+    width: 500px;
+    height: 200px;
+    box-shadow: inset 0 0 10px 5px rgba(24, 238, 16, 0.5);
+}
+
+.dept_search h2{
+    padding-top: 15px;
+    text-align: center;
+}
+
+
+.date_search input{
+    border-radius: 10px;
+    border: none;
+    box-shadow: inset 0 0 10px 5px rgba(24, 238, 16, 0.5);
+    padding: 8px;
+    width: 200px;
+    margin-top: 45px;
+    margin-left: 60px;
 }
 
 .date_search{
-    background-color: green;
+    background-color: white;
+    border-radius: 15px;
+    width: 500px;
+    height: 200px;
+    box-shadow: inset 0 0 10px 5px rgba(24, 238, 16, 0.5);
+}
+.dept_search select{
+    outline: none;
+    border: none;
+    box-shadow: inset 0 0 10px 5px rgba(24, 238, 16, 0.5);
+    border-radius: 10px;
+    width: 200px;
+    padding: 8px;
+    margin-top: 45px;
+    margin-left: 60px;
 }
 
+.dept_search option{
 
+    background-color: rgb(67, 235, 129);
+    color: white;
+}
+
+.date_search h2{
+    padding-top: 15px;
+    text-align: center;
+}
+
+button{
+    border-radius: 20px;
+    border:1px solid #ff4b2b;
+    background-color: #ff4b2b;
+    color: #fff;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 8px 30px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+button:hover{
+    letter-spacing: 1PX;
+    background-color: #DC5D19;
+    color: white;
+    box-shadow: #DC5D19 0px 7px 29px 0px;
+}
+
+button:active{
+    letter-spacing: 1PX;
+    background-color: #DC5D19;
+    color: white;
+    box-shadow: #dc2019 0px 7px 29px 0px;
+    transform: translateY(10px);
+}
+
+.count{
+    margin-top: 20px;
+    text-align: center;
+}

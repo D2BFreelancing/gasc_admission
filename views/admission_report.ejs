@@ -1,68 +1,30 @@
 
-<form action="/date_admission_reports" method="post">
-    <label for="date">Date:</label>
-    <input type="date" id="date" name="date">
-    <button type="submit">Get Report</button>
-</form>
+<link rel="stylesheet" href="/css/ad_report.css">
+<div class="main">
+    <h2 class="count">Total Number of Admission: <%= count %></h2>
+     <!-- <a href="/exc"><button>Print</button></a> -->
+    <div class="search_option">
+        <% if (typeof options !== 'undefined' && options.length > 0) { %>        
+            <form action="/report_date" method="post">
+                <div class="date_search">
+                    <h2>Date selection</h2> 
+                    <input type="date" name="date" id="date" required>
+                    <button type="submit">Search</button>
+                </div>
+            </form>
+            <form action="/report_dept" method="post">    
+                <div class="dept_search">
+                        <h2>Course Selection</h2>
+                        <select name="dept" required>
+                            <option value="default" selected disabled >Choose a course...</option>
+                            <% options.forEach(function(option) { %>
+                                <option value="<%= option.title %>"><%= option.title %></option>
+                            <% }); %>
+                        </select>
+                    <button type="submit">search</button>
+                </div>
+            </form>
+            <% } %>    
+    </div>
+</div>
 
-<% if (typeof fullDate != 'undefined') { %>
-    <% if (fullDate == 'no data') { %>
-        <br>
-        <h2>User not Found</h2>
-    <% } else { %>
-        <h2>No of Canceled Admission on <span><%= fullDate.date %></span>: <%= fullDate.length %></h2>
-        <table border="2" style="border-collapse: collapse;">
-            <tr>
-                <th>Name</th>
-                <th>Department</th>
-                <th>User Id</th>
-            </tr>
-            <% fullDate.forEach(function(item) { %>
-                <tr>
-                    <td><%= item ? item.s_name : "no name" %></td>
-                    <td><%= item ? item.cname : "no name" %></td>
-                    <td><%= item ? item.uid : "no name" %></td>
-                </tr>
-            <% }); %>
-        </table>
-    <% } %>
-<% } else { %>
-    <h2>Without data</h2>
-<% } %>
-
-<form action="/dept_admission_reports" method="post">
-    <label for="dept">Select Course:</label>
-    <select name="dept" id="dept">
-        <% options.forEach(function(option) { %>
-            <option value="<%= option %>"><%= option %></option>
-        <% }); %>
-    </select>
-    <button type="submit">Search</button>
-</form>
-
-<% if (typeof data != 'undefined' && typeof dept != 'undefined') { %>
-    <% if (data == 'no data') { %>
-        <br>
-        <h2>User not Found</h2>
-    <% } else { %>
-        <h2>No of Canceled Admission in <span><%= dept %></span>: <%= data.length %></h2>
-        <table border="2" style="border-collapse: collapse;">
-            <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Department</th>
-                <th>User Id</th>
-            </tr>
-            <% data.forEach(function(item) { %>
-                <tr>
-                    <td><%= item ? item.date : "no date" %></td>
-                    <td><%= item ? item.s_name : "no name" %></td>
-                    <td><%= item ? item.cname : "no name" %></td>
-                    <td><%= item ? item.uid : "no name" %></td>
-                </tr>
-            <% }); %>
-        </table>
-    <% } %>
-<% } else { %>
-    <h2>Without data</h2>
-<% } %>

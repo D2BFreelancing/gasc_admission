@@ -29,7 +29,7 @@ body{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
-    margin-left: 30px;
+    margin-left: 9%;
     background-color: rgb(255, 255, 255);
     width: 1300px;
     height: 66vh;

@@ -6,7 +6,7 @@
         <div class="search_contain">
             <div class="search">
                 <label for="">Search ID</label>
-                <input type="text" name="uid" id="uid" placeholder="search cancel ID">
+                <input type="text" name="uid" id="uid" placeholder="search cancel ID" required>
             </div>
             <div class="btn">
                 <button type="submit" class="rectangle-9">Search</button>
@@ -54,7 +54,8 @@
                 <span><%= data ?data.uid :"no name" %></span>
             </div>
             <div class="div_btn">
-                <a href="/cancel_update/<%= data.cname %>/<%= data.uid%>"><button class="data_btn">Cancel</button></a>
+                <a href="/cancel_update/<%= data.cname %>/<%= data.uid %>" onclick="return confirm('Do You Want to Cancel <%= data.s_name %> Admission?');"><button class="data_btn">Cancel</button></a>
+
             </div>
           </div>
         <% } %>

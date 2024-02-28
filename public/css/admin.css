@@ -1,0 +1,244 @@
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;   
+    background: linear-gradient(28deg, #ffffff 50%, #a3ebc1 50%);
+    height: 100vh;
+}
+
+.home{
+    align-items: end;
+    text-align: right;
+    justify-content: right ;
+    margin-right: 20px;
+    margin-top: 10px;
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.home a{
+    text-decoration: none;
+    color: white;
+    text-shadow: 2px 2px 3px black;
+}
+
+.links{
+    display: flex;
+    justify-content: right;
+}
+
+.links a{
+    font-size: 20px;
+    text-decoration: none;
+    padding-right: 30px;
+}
+
+.limit{
+    border-radius: 15px;
+    box-shadow: #000000 0px 5px 29px 0px;
+    width: 50%;
+    height: 10%;
+    margin-left:25%;
+    border-radius: 10px;
+    padding-top: 30px;
+    margin-top: 10px;
+}
+
+.limit form label{
+    color: white;
+    text-shadow: 2px 2px 3px black;
+    padding-left: 110px;
+    font-size: 23px;
+    padding-right: 10px;
+}
+
+.add{
+    text-align: center;
+    padding-top: 20px;
+}
+
+.limit form input{
+    outline: none;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: #000000 0px 2px 10px 0px;    
+}
+
+
+.add{
+    font-size: 25px;
+}
+
+
+.form_div {
+    display: flex;
+    padding-left: 20px;
+    padding-right: 20px;
+    flex-direction: column;
+}
+
+.form_div input {
+    padding: 10px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    background-color:rgb(245, 255, 243);
+    border-bottom: 2px solid rgb(119, 119, 199);
+    font-size: 17px;
+}
+
+.form_div input:hover{
+    background-color: #ffffff;
+}
+
+.forms{
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin-left: 24%;
+    background-color: rgb(255, 255, 255);
+    width: 800px;
+    height: 60vh;
+    border-radius: 15px;
+    box-shadow: #000000 0px 5px 29px 0px;
+}
+
+.btn{
+    margin-left: 40%;
+    width: 160px;
+}
+
+button{
+    border-radius: 10px;
+    border: none;
+    background-color: #4fcf5a;
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 8px 30px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+button:hover{
+    letter-spacing: 1PX;
+    background-color: #DC5D19;
+    color: white;
+    box-shadow: #DC5D19 0px 7px 29px 0px;
+}
+
+button:active{
+    letter-spacing: 1PX;
+    background-color: #DC5D19;
+    color: white;
+    box-shadow: #dc2019 0px 7px 29px 0px;
+    transform: translateY(10px);
+}
+
+.link a{
+    text-decoration: none;
+    list-style: none;
+    font-size: 20px;
+    color: #794949;
+    font-weight: 700;
+}
+
+.link a:hover{
+    color: black;
+}
+
+/* ----------------------------------------popup--------------------------------- */
+  /* Popup container */
+  .popup {
+    display: flex;
+    position: fixed; 
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 60px; /* 60px from the top */
+}
+
+/* Popup content */
+.popup-content {
+    background-color: #ffffff;
+    margin: 5% auto; /* 5% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+    height:50vh;
+    border-radius: 15px; /* Could be more or less, depending on screen size */
+    box-shadow: #055a2f 0px 7px 29px 0px;
+}
+
+.popup-content h2{
+    text-align: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.popup-content h1{
+    text-align: center;
+    color: #790e0e;
+}
+
+.popup-content p{
+    font-size: 20px;
+    font-weight: 900;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: rgb(0, 0, 0);
+    padding-top: 5px;
+    padding-left: 190px;
+}
+
+/* Close button */
+.close {
+    color: #000000;
+    float: right;
+    font-size: 38px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: rgb(255, 0, 0);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.for{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+}
+
+
+.sele{
+    margin-left: 17px;
+}
+
+.drop{
+    padding: 10px;
+    margin-left: 17px;
+    width: 550px;
+    border-radius: 10px;
+    padding: 10px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    background-color:rgb(245, 255, 243);
+    border-bottom: 2px solid rgb(119, 119, 199);
+    font-size: 12px;
+}
+
+.update{
+    text-shadow: 2px 2px 3px black;     
+}
