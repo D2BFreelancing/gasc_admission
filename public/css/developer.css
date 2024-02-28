@@ -1,0 +1,96 @@
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;   
+    background: linear-gradient(25deg, #f3ffe0 50%, #adffcf 50%);
+    height: 100vh;
+}
+
+.heading{
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-content: center;
+}
+
+.heading h1{
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    padding-top: 30px;
+    text-align: center;
+    font-size: 40px;
+    color: rgb(12, 62, 57);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.heading span{
+    font-size: 35px;
+    color: rgb(15, 19, 130);
+    font-weight: 700;
+    text-align: center;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+    from {
+      text-shadow: 0 0 10px #22bcf8, 0 0 20px #22bcf8, 0 0 30px #22bcf8, 0 0 40px #22bcf8, 0 0 50px #22bcf8, 0 0 60px #70d3fa, 0 0 70px #70d3fa;
+    }
+    
+    to {
+      text-shadow: 0 0 20px #bdf8fc 0 30px #bdf8fc, 0 0 40px #bdf8fc, 0 0 50px #bdf8fc, 0 0 60px #b12424, 0 0 70px #b61c24, 0 0 80px #9c0909;
+    }
+  }
+
+.main{
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.content{
+    margin-top: 10%;
+    gap: 6rem;
+    justify-content: center;
+    display: flex;
+}
+
+.developers{
+    animation:animateBg 4s linear infinite; 
+    width: 400px;
+    height: 200px;
+    border-radius: 10px;
+    text-align: center;
+    padding-top: 20px;
+    box-shadow: inset 0 0 10px 5px rgba(24, 238, 16, 0.5);
+    background-color: rgb(255, 252, 252);
+}
+
+@keyframes animateBg {
+    100% {
+      filter:hue-rotate(360deg);
+  }
+  }
+  
+
+.developers h1{
+    font-size: 25px;
+    color: rgb(13, 179, 159);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-bottom: 15px;
+}
+
+.mentors{
+    width: 400px;
+    height: 200px;
+    border-radius: 10px;
+    text-align: center;
+    padding-top: 20px;
+    box-shadow: inset 0 0 10px 5px rgba(24, 238, 16, 0.5);
+    background-color: rgb(255, 252, 252);
+    animation:animateBg 4s linear infinite; 
+}
+
+.mentors h1{
+    font-size: 25px;
+    color: rgb(13, 179, 159);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-bottom: 40px;
+}
