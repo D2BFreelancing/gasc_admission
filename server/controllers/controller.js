@@ -760,3 +760,6 @@ exports.dept_admission_report = async (req, res) => {
 
 // }
 
+exports.Powered_by = async (req, res) => {
+    res.render('Powered_by');
+}

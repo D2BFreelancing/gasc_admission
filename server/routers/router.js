@@ -45,7 +45,7 @@ router.post('/dept_cancel_reports',controller.dept_cancel_reports);
 // admin router
 // router.get('/admin',controller.admin);
 router.post('/update_limit', controller.update_limit)
-
+router.get('/Powered_by', controller.Powered_by);
 
 
 router.post('/updateAdmin', controller.updateAdmin)
