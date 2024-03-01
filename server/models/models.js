@@ -54,6 +54,12 @@ const courseSchema =new Schema({
         },
         fees:{
             type:Number
+        },
+        actualLimit:{
+            type:Number
+        },
+        allortedLimit:{
+            type:Number
         }
 });
 

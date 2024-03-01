@@ -136,12 +136,14 @@ res.render('login',{layout:false,ch:''})
 
  exports.courseAdd = async (req, res) => {
     const course = req.body.course;
-    const {fees,key } = req.body; // Extracting data from request body
+    const {fees,key,actualLimit,allortedLimit } = req.body; // Extracting data from request body
     try {
         const newCourse = new setCourse({
             title: course,
             fees: Number(fees),
-            key: key
+            key: key,
+            actualLimit:actualLimit,
+            allortedLimit:allortedLimit
         });
        
         await newCourse.save();
