@@ -5,7 +5,7 @@ const xlsx = require('xlsx');
 const fs = require('fs');
 const db = require('../database/database');
 require('../models/models')
-const {setLimit,dept_schema} = require('../models/models');
+const {dept_schema} = require('../models/models');
  const {setCourse} = require('../models/models');
 
 const login_data=require('../models/login');
@@ -26,14 +26,8 @@ const option_val = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA',
         return setting.limit;
     }
 
-    exports.home=async(req,res)=>{
-        res.redirect('home');
-    }
 
 
-    exports.home=async(req,res)=>{
-        res.redirect('home');
-    }
 
 
 exports.update_limit = async (req,res)=>{
@@ -54,10 +48,7 @@ const saveDocument = async (document) => {
         throw error; 
     }
 };
-exports.login=async(req,res)=>{
-    res.render('login',{layout:false,ch:''})
-    res.render('login',{layout:false,ch:''})
-}
+
 exports.login_fill=async(req,res)=>{
     console.log(req.body);
     const name=req.body.username;
@@ -69,9 +60,9 @@ exports.login_fill=async(req,res)=>{
     }
     else if (user.name === 'admin') {
         if (user.pass === pass) {
-            const setting = await setLimit.find();
+          //  const setting = await setLimit.find();
             const option = await setCourse.find()
-            console.log(setting);
+          //  console.log(setting);
             res.render('admin', { layout: false,option });
             return;
         } 
@@ -89,9 +80,7 @@ exports.login_fill=async(req,res)=>{
    
     }
 } 
-exports.sign_form=async(req,res)=>{
-    res.render('singup',{layout:false});
-}
+
 exports.signdata=async(req,res)=>{
     const data={
         name:req.body.username,
@@ -102,37 +91,18 @@ const insert=await login_data.insertMany([data]);
 console.log(insert);
 res.render('login',{layout:false,ch:''})
 }
- exports.home = async(req,res)=>{
-    res.render('home');
- }
+ 
    
- exports.new = async(req,res)=>{
-   const fitchdata= await setCourse.find({});
-   console.log(fitchdata);  
-  
-  res.render('new-admission', { uid:"nodata",fitchdata});
- }
+
  exports.new2 = async(req,res)=>{
     const fitchdata= await setCourse.find({});
    console.log(fitchdata);  
     var uid=req.params.id;
     var s_name=req.params.s_name;
     console.log("sound"+req.params);
-     res.render('new-admission', { options: option_val,uid,s_name,fitchdata});
+     res.render('new-admission', { uid,s_name,fitchdata});
   }
- exports.transfer = async(req,res)=>{
-    const fitchdata= await setCourse.find({});
-    res.render('transfer-admission',{data:null,options:fitchdata});
- }
-
- exports.cancel = async(req,res)=>{
-    res.render('cancel')
- }
  
- exports.report = async(req,res)=>{
-    res.render('reports',{options:option_val});
- }
-
 
  exports.courseAdd = async (req, res) => {
     const course = req.body.course;
@@ -167,6 +137,10 @@ exports.dept = async (req, res) => {
     const currentYearLastTwoDigits = getCurrentYearLastTwoDigits();
     
     const searchName = req.body.cname;
+    const balance = 0;
+    const extra = 0;
+    console.log(balance);
+    console.log(extra);
     
     const collectionName = transformInputToCollectionName(searchName);
 
@@ -176,10 +150,10 @@ exports.dept = async (req, res) => {
     try {
         // Check the current count of documents in the collection
         const currentDocumentCount = await CollectionModel.countDocuments();
-        if (currentDocumentCount >= MAX_DOCUMENTS_PER_COLLECTION()) {
-            // If the limit is reached, prevent adding a new document and inform the user
-            return res.status(400).send(`The limit of ${MAX_DOCUMENTS_PER_COLLECTION()} documents has been reached for the ${searchName} collection.`);
-        }
+        // if (currentDocumentCount >= MAX_DOCUMENTS_PER_COLLECTION()) {
+        //     // If the limit is reached, prevent adding a new document and inform the user
+        //     return res.status(400).send(`The limit of ${MAX_DOCUMENTS_PER_COLLECTION()} documents has been reached for the ${searchName} collection.`);
+        // }
 
         var total = currentDocumentCount + 1;
         const result = await setCourse.find({ title: searchName }, { key: 1, _id: false })
@@ -188,7 +162,7 @@ exports.dept = async (req, res) => {
         // const middlePart = uidMiddleMapping[searchName];
         console.log('middlepart',middlePart);
         var uid = `${currentYearLastTwoDigits}-${middlePart}-${total.toString().padStart(3, '0')}`;
-
+console.log('fwfw',balance);
         // Assuming you have the rest of your document fields ready to be saved
         const newDocumentData = {
             date: req.body.date,
@@ -197,15 +171,18 @@ exports.dept = async (req, res) => {
             s_name: req.body.s_name,
             uid:uid,
             fees: req.body.fees,
-            in_dept:true,
-            balance:req.body.balance,
+            in_dept: true,
+            transfered:false,
+            balance: balance,
+            extra: extra,
+            paid: req.body.fees,
             cancel:false
         };
         const newDocument = new CollectionModel(newDocumentData);
 
         await saveDocument(newDocument);
         // After successful insertion, you can redirect or respond as needed
-        res.redirect(`/new_student/${uid}/${req.body.s_name}`);
+        res.redirect(`/new_student/${uid}/${req.body.s_name}/${total}/${req.body.fees}`);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error saving data');
@@ -262,7 +239,6 @@ for(var dept of models){
 
 
 exports.transfer_admission = async (req, res) => {
-   
     const transformInputToCollectionName = (input) => {
         if (!input) {
             throw new Error('Course name is undefined');
@@ -270,14 +246,25 @@ exports.transfer_admission = async (req, res) => {
         return input.toLowerCase().replace(/\s+/g, '_');
     };
 
-   
+    let extra = 0;
+    let balance = 0;
     const uid = req.body.uid;
     const sourceCourseName = req.body.o_cname;
     const destCourseName = req.body.cname; 
+    const ver = parseFloat(req.body.balance); // Assuming balance is a number
+    console.log(ver);
 
-   
-    const sourceCourse = mongoose.model(transformInputToCollectionName(sourceCourseName),dept_schema);
-    const destCourse = mongoose.model(transformInputToCollectionName(destCourseName),dept_schema);
+    if (ver > 0) {
+        extra = ver;
+        console.log('put in extra');
+    } else {
+        balance = ver;
+        console.log('put in balance');
+    }
+
+    const sourceCourse = mongoose.model(transformInputToCollectionName(sourceCourseName), dept_schema);
+    const destCourse = mongoose.model(transformInputToCollectionName(destCourseName), dept_schema);
+
 
     const searchName = req.body.cname;
     const collectionName = transformInputToCollectionName(searchName);
@@ -291,22 +278,45 @@ exports.transfer_admission = async (req, res) => {
     }
 
     try {
-        // await transferStudent(uid, sourceCourse, destCourse);
-        await sourceCourse.updateOne({"uid":uid,"in_dept":true},{$set:{"in_dept":false}})
+        await sourceCourse.updateOne({ "uid": uid, "in_dept": true }, { $set: { "in_dept": false } });
+
+        const oldc = await sourceCourse.find({ uid: uid });
+        oldc.forEach(obj => {
+            const objBalance = obj.balance ? parseFloat(obj.balance) : 0;
+            const objExtra = obj.extra ? parseFloat(obj.extra) : 0;
+            xbalance += objBalance;
+            xextra += objExtra;
+        });
+        
+        // Adjust balance and extra
+        if (extra > balance) {
+            extra -= balance;
+            balance = 0;
+            console.log('if');
+        } else {
+            balance -= extra;
+            extra = 0;
+            console.log('else');
+        }
+        console.log('final extra', extra);
+        console.log('final balance',balance);
+        const tt = await destCourse.find().count() + 1;
 
         const newDocument = new model({
             date: req.body.date,
             cname: req.body.cname,
-            token: req.body.token,
+            token: tt,
             s_name: req.body.s_name,
             uid: req.body.uid,
-            fees: req.body.new_fees,
-            fees: req.body.new_fees,
-            in_dept:true,
-            cancel:false
+            fees: req.body.new_fees, // Assuming this is correct
+            in_dept: true,
+            cancel: false,
+            transfered: true,
+            balance: balance,
+            extra: extra
         });
-        await saveDocument(newDocument)
 
+        await saveDocument(newDocument);
         sound(collectionName);
 
         res.redirect('transfer-admission');
@@ -345,10 +355,10 @@ exports.searchAndDateFind = async (req, res) => {
                 console.log('vanakam da mapala');
                  const Model = mongoose.model(collectionName,dept_schema);
                 console.log('rfr',Model);
-                const totalData = await Model.find({}, { uid: 1, in_dept: 1, token: 1,s_name:1});
+                const totalData = await Model.find({}, { uid: 1, in_dept: 1, token: 1,s_name:1,cancel:1, balance:1});
                 console.log("fef",totalData);
 
-                const in_department_entries = totalData.filter(entry => entry.in_dept === true);
+                const in_department_entries = totalData.filter(entry => entry.in_dept == true);
 
                 data = {
                     number_of_entries: totalData.length,
@@ -393,9 +403,47 @@ exports.report_date= async (req,res) =>{
                 const modelData = await Model.find({ date: specificDate });
                 fulldata.push(...modelData);
                 
-            }
+    }
+    //console.log('hirfnrf', fulldata);
+    for (let i in fulldata) {
+       // if()
+    }
+    var feee = fulldata.map(obj => obj.fees);
+var bal = fulldata.map(obj => obj.extra);
+var trr = fulldata.map(obj => obj.transfered);
+var tot = 0; // Initialize the total variable
+
+    console.log('dbebhef', trr);
+    console.log('gerjgenr',bal);
+
+for (let i = 0; i < feee.length; i++) {
+    if (trr[i] === true) {
+        if (bal[i]) {
+            tot += parseInt(bal[i]);
+        }
+        else {
+            tot += parseInt(feee[i]);
+        }
+    }
+}
+
+console.log(tot);
+    // for (feess in feee) {
+    //     if (bal[feess]){
+    //         tot += parseInt(bal[feess])
+    //     }
             
-            res.render('admission_reportResult', { option_val,fulldata,date});
+    //     if (trr[feess]== false) {
+    //         tot += parseInt(feee[feess]);
+    //     }
+        
+    //     // Add the fee to the total (after converting it to a number)
+    // }
+    
+    //console.log('Total fees:', tot);
+    
+            const fitchdata= await setCourse.find({});
+            res.render('admission_reportResult', { fitchdata,fulldata,date,tot});
         
         }
 
@@ -648,57 +696,87 @@ exports.updateAdmin = async (req, res) => {
 // Converting data into Excel sheet
 
 
-// const excelFileName = 'Admission.xlsx';
+const excelFileName = 'Admission.xlsx';
 
-// // Create a new workbook
-// const workbook = xlsx.utils.book_new();
+// Create a new workbook
+const workbook = xlsx.utils.book_new();
 
-// var coo = 4;
-// exports.excel = async (req, res) => {
-//     var ddd = 0;
-//     var daa = [];
-//     const darrs = await setCourse.find({}, { title: 1, _id: 0 });
+var coo = 4;
+exports.excel = async (req, res) => {
+    var ddd = 0;
+    var daa = [];
+    const darrs = await setCourse.find({}, { title: 1, _id: 0 });
     
-//     // Extract titles from the array of objects
-//     const titles = darrs.map(item => item.title);
+    // Extract titles from the array of objects
+    const titles = darrs.map(item => item.title);
     
-//     console.log(titles);
+    console.log(titles);
     
-//     const transformInputToCollectionName = (input) => {
-//         return input.toLowerCase().replace(/\s+/g, '_')
-//     };
-//     const transformedTitles = titles.map(transformInputToCollectionName);
-// console.log(transformedTitles);
+    const transformInputToCollectionName = (input) => {
+        return input.toLowerCase().replace(/\s+/g, '_')
+    };
+    const transformedTitles = titles.map(transformInputToCollectionName);
+console.log(transformedTitles);
    
-//     for (let title of titles) {
-//         const collectionName = transformInputToCollectionName(title);
-//         // Access the collection dynamically and retrieve all data
-//         const collectionData = await mongoose.model(collectionName, dept_schema).find({ cancel: false })
-//         console.log(`Data for collection "${collectionName}":`, collectionData);
-//         daa.push(...collectionData)
-//         console.log(daa);
-//         const worksheet = xlsx.utils.json_to_sheet(daa)
+    for (let title of titles) {
+        const collectionName = transformInputToCollectionName(title);
+        // Access the collection dynamically and retrieve all data
+        const collectionData = await mongoose.model(collectionName, dept_schema).find({ cancel: false })
+        console.log(`Data for collection "${collectionName}":`, collectionData);
+        daa.push(...collectionData)
+        console.log(daa);
+        const worksheet = xlsx.utils.json_to_sheet(daa)
 
 
 
-//         xlsx.utils.book_append_sheet(workbook, worksheet, coo);
-//         coo = coo + 1;
-//         console.log('cccc',coo);
+        xlsx.utils.book_append_sheet(workbook, worksheet, coo);
+        coo = coo + 1;
+        console.log('cccc',coo);
 
-//         // Write workbook to a file
-//         xlsx.writeFile(workbook, excelFileName, { bookType: 'xlsx', type: 'file' });
+        // Write workbook to a file
+        xlsx.writeFile(workbook, excelFileName, { bookType: 'xlsx', type: 'file' });
 
-//         console.log(`Data exported to ${excelFileName}`);
-//         // ddd = collectionData+ddd
-//         //     console.log(typeof(ddd));
-//     }
-// //     console.log(ddd);
+        console.log(`Data exported to ${excelFileName}`);
+        // ddd = collectionData+ddd
+        //     console.log(typeof(ddd));
+    }
+  // console.log(ddd);
 
-//     // File Name for Excel
+    // File Name for Excel
 
 
-// }
-
-exports.Powered_by = async (req, res) => {
-    res.render('Powered_by');
 }
+
+
+
+exports.fullcoo = async (req, res) => {
+    let ddd = []; // Initialize as an array
+    const darrs = await setCourse.find({}, { title: 1, _id: 0 });
+    
+    // Extract titles from the array of objects
+    const titles = darrs.map(item => item.title);
+    
+    console.log(titles);
+    
+    const transformInputToCollectionName = (input) => {
+        return input.toLowerCase().replace(/\s+/g, '_')
+    };
+    const transformedTitles = titles.map(transformInputToCollectionName);
+    console.log(transformedTitles);
+   
+    for (let title of titles) {
+        const collectionName = transformInputToCollectionName(title);
+        // Access the collection dynamically and retrieve all data
+        const collectionData = await mongoose.model(collectionName, dept_schema).find();
+        console.log(`Data for collection "${collectionName}":`, collectionData);
+        ddd = ddd.concat(collectionData); // Concatenate collectionData to ddd
+        console.log(typeof (ddd));
+        
+
+    }
+    console.log(ddd);
+   
+    res.render('ttreport',{fulldata:ddd})
+}
+
+

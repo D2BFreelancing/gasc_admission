@@ -1,21 +1,29 @@
 const express = require('express')
 const router = express.Router();
-
+// main Requirments
 const controller = require('../controllers/controller');
+const rendering = require('../controllers/rendering');
+const { render } = require('ejs');
 
-//const {setCourse} = require("../models/models")
 
-router.get('/',controller.login);//home page
-router.get('/home',controller.home);//home page
-router.post('/login',controller.login_fill);//login form 
-router.get('/sign_up',controller.sign_form);//signup form
+//Rendering Controller
+router.get('/',rendering.login);//home page
+router.get('/home', rendering.home);//home page
+router.get('/sign_up',rendering.sign_form);//signup form
+router.get('/home',rendering.home);//defalut home page
+router.get('/new-admission',rendering.new);
+router.get('/transfer-admission',rendering.transfer);//transfer-admission page 
+router.get('/cancel',rendering.cancel);//cancel page
+router.get('/report',rendering.report);//report page
+router.get('/Powered_by', rendering.Powered_by);// Powered_by Developer Shrine Page
+
+
+
+router.post('/login', controller.login_fill);//login form 
 router.post('/signup_data',controller.signdata);//data for login find
-router.get('/home',controller.home);//defalut home page
-router.get('/new-admission',controller.new);//new admission 
+//new admission 
 router.get('/new_student/:id/:s_name',controller.new2);//redirct the new admission page
-router.get('/transfer-admission',controller.transfer);//transfer-admission page 
-router.get('/cancel',controller.cancel);//cancel page
-router.get('/report',controller.report);//report page
+
 router.post('/form_submit',controller.dept);//
 router.get('/get-collection-count', controller.getCollectionCount);
 
@@ -48,11 +56,11 @@ router.post('/dept_cancel_reports',controller.dept_cancel_reports);
 // admin router
 // router.get('/admin',controller.admin);
 router.post('/update_limit', controller.update_limit)
-router.get('/Powered_by', controller.Powered_by);
 
 
+router.get('/TotalReport',controller.fullcoo)
 router.post('/updateAdmin', controller.updateAdmin)
-// router.get('/exc',controller.excel)
+ router.get('/exc',controller.excel)
 
 
 module.exports = router;

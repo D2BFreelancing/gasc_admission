@@ -1,0 +1,33 @@
+
+<link rel="stylesheet" href="/css/ad_report.css">
+<div class="date_main">
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Department</th>
+        <th>User Id</th>
+        <th>Token</th>
+        <th>Fees</th>
+        <!-- <th>Options</th> -->
+    </tr>
+    <% fulldata.forEach(item => { %>
+        <tr>
+            
+            <td><%= item.s_name ? item.s_name : "no name" %></td>
+            <td><%= item.cname ? item.cname : "no name" %></td>
+            <td><%= item.uid ? item.uid : "no name" %></td>
+            <td><%= item.token ? item.token : " " %></td>
+            <td><%= item.fees ? item.fees :  "0" %></td>
+            <!-- <td><button><a href="#">view</a></button></td> -->
+        </tr>
+    <% }); %>
+    <tr style="color: red;">
+        <td>Total</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td style="font-weight: bolder;font-family: cursive;"><%= tot %></td>
+    </tr>
+    
+</table>
+</div>

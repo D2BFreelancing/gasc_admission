@@ -27,22 +27,33 @@ const dept_schema = new mongoose.Schema({
         type:Number,
         require:true,
     },
+    paid: {
+        type: Number,
+      default: 0  
+    },
     in_dept:{
         type:Boolean,
     },
     balance:{
-        typeof:Number,
+        type:Number,
+    },
+    extra: {
+      type:Number  
+    },
+    transfered: {
+      type:Boolean  
     },
     cancel:{
         type:Boolean,
     }
 });
 
-const limitSchema = new Schema({
-    limit:{
-        typeof:Number
-    }
-});
+// const newLocal = new Schema({
+//     limit: {
+//         typeof: Number
+//     }
+// });
+// const limitSchema = newLocal;
 
 const courseSchema =new Schema({
 
@@ -54,8 +65,51 @@ const courseSchema =new Schema({
         },
         fees:{
             type:Number
-        }
+    },
+    limit:{
+        typeof:Number
+    }
 });
+
+
+
+
+//const setLimit = mongoose.model('limit',limitSchema);
+const setCourse = mongoose.model('Course',courseSchema);
+
+
+
+
+
+exports.setCourse=setCourse;
+//exports.setLimit=setLimit;
+exports.dept_schema=dept_schema;
+// const name="ba_tamil";
+// const model=mongoose.model(name);
+
+
+
+
+
+// setCourse.find()
+// .then((course_list)=>{
+
+// for (let course of course_list) {
+//         const model_name = course.title.toLowerCase().replace(/\s+/g, '_');
+  
+//         // Check if model already exists to avoid re-compilation error
+//         let model;
+//         if (mongoose.models[model_name]) {
+//           model = mongoose.models[model_name];
+//         } else {
+//           model = mongoose.model(model_name, dept_schema);
+//         }
+  
+//         console.log(`Model created for: ${model_name}`);
+//         // You can do something with 'model' here if needed
+//       }
+//     })
+//     console.log(mongoose.modelNames());
 
 
 // const ba_tamil = mongoose.model('ba_tamil',dept_schema);
@@ -89,38 +143,5 @@ const courseSchema =new Schema({
 // const pgdca = mongoose.model('pgdca',dept_schema);
 // const ca_foundation = mongoose.model('ca_foundation',dept_schema);
 
-const setLimit = mongoose.model('limit',limitSchema);
-const setCourse = mongoose.model('Course',courseSchema);
 
 
-// const name="ba_tamil";
-// const model=mongoose.model(name);
-
-
-
-
-
-// setCourse.find()
-// .then((course_list)=>{
-
-// for (let course of course_list) {
-//         const model_name = course.title.toLowerCase().replace(/\s+/g, '_');
-  
-//         // Check if model already exists to avoid re-compilation error
-//         let model;
-//         if (mongoose.models[model_name]) {
-//           model = mongoose.models[model_name];
-//         } else {
-//           model = mongoose.model(model_name, dept_schema);
-//         }
-  
-//         console.log(`Model created for: ${model_name}`);
-//         // You can do something with 'model' here if needed
-//       }
-//     })
-//     console.log(mongoose.modelNames());
-
-
-exports.setCourse=setCourse;
-exports.setLimit=setLimit;
-exports.dept_schema=dept_schema;

@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="/css/ad_result.css">
+
+
+<script>
+     var rr = document.getElementById('dde')
+    function formatDate(dateString) {
+        if (!dateString) return ''; // Return empty string if dateString is not defined
+        const date = new Date(dateString); // Convert dateString to Date object
+        return date.toLocaleDateString('en-US', {    month: 'short',
+    day: '2-digit',
+    year: 'numeric' });
+    rr.value = dd;
+
+    }
+    </script>
+<div class="date"> 
+    <% if (typeof fulldata !== 'undefined') { %>
+        <% if (fulldata === 'no data') { %>
+            <br>
+            <h2>User not Found</h2>
+        <% } else { %>
+            <div class="date_main">
+            <h2 class="total">No of Admission : <%= fulldata.length %></h2>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>User Id</th>
+                    <th>Token</th>
+                    <!-- <th>Options</th> -->
+                </tr>
+                <% fulldata.forEach(item => { %>
+
+                    <tr>
+                        <td  id="dde"><%= item.date%></td>
+                        <td><%= item.s_name ? item.s_name : "no name" %></td>
+                        <td><%= item.cname ? item.cname : "no name" %></td>
+                        <td><%= item.uid ? item.uid : "no name" %></td>
+                        <td><%= item.token ? item.token : " " %></td>
+                        <!-- <td><button><a href="#">view</a></button></td> -->
+                    </tr>
+                <% }); %>
+            </table>
+        </div>
+        <% } %>
+    <% } else { %>
+        <!-- <h2>Without data</h2>  -->
+    <% } %>
+    </div>
+</div>
+</div>
