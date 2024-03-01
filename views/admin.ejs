@@ -5,13 +5,14 @@
 <a href="/sign_up"><button>Add New User</button></a>
 <button onclick="openPopup();" class="update">Update  Course Information</button>
 </div>
-<div class="limit">
+<!-- <div class="limit">
 <form action="/update_limit" method="POST">
+    
     <label for="newLimit">New Limit:</label>
     <input type="number" id="newLimit" name="newLimit" required >
     <button type="submit">Update Limit</button>
 </form>
-</div>
+</div> -->
 <div class="ad_course">
 <form action="/add_course" method="post" class="forms">
     <span class="add">Add Course & Fees</span>
@@ -28,6 +29,14 @@
     <input type="text" name="key" id="key" required>
     </div>
     <div class="form_div">
+        <label for="actualLimit">Actual Limit:</label>
+        <input type="text" name="actualLimit" id="actualLimit" required>
+    </div>
+    <div class="form_div">
+    <label for="allortedLimit">Allorted Limit:</label>
+    <input type="text" name="allortedLimit" id="allortedLimit" required>
+    </div>
+    <div class="form_div">
         <button type="submit" class="btn">Submit</button>
     </div>
 </form>
@@ -41,7 +50,7 @@
         <form action="/updateAdmin" method="post" class="for">
             <h2>Update Course</h2>
             <label for="course" class="sele">Course Title:</label>
-            <select name="dept" class="drop down"> 
+            <select name="dept" class="drop down" onchange="getCourseDetails(this.value)"> 
                 <option value="default" selected disabled hidden>Choose a course...</option>
                 <% option.forEach(function(option) { %>
                     <option value="<%= option.title %>"><%= option.title %></option>
@@ -49,12 +58,20 @@
             </select>
             <% } %>
             <div class="form_div">
-                <label for="fees">Fees:</label>
-                <input type="text" name="fees" id="fees" required>
+                <label for="feesUpdate">Fees:</label>
+                <input type="text" name="fees" id="feesUpdate" required>
             </div>
             <div class="form_div">
-                <label for="key">Course Key:</label>
-                <input type="text" name="key" id="key" required>
+                <label for="keyUpdate">Course Key:</label>
+                <input type="text" name="key" id="keyUpdate" required>
+            </div>
+            <div class="form_div">
+                <label for="actualLimitUpdate">Actual Limit:</label>
+                <input type="text" name="actualLimit" id="actualLimitUpdate" required>
+            </div>
+            <div class="form_div">
+                <label for="allortedLimitUpdate">Allorted Limit:</label>
+                <input type="text" name="allortedLimit" id="allortedLimitUpdate" required>
             </div>
             <div class="form_div">
                 <button type="submit" class="btn">Submit</button>
@@ -65,13 +82,36 @@
 </div>
 </div>
 <script>
+    var getFees = document.getElementById( "feesUpdate" );
+    var getKey = document.getElementById( "keyUpdate" );
+    var getActualLimit = document.getElementById( "actualLimitUpdate" );
+    var  getAllortedLimit = document.getElementById( "allortedLimitUpdate" );
     document.getElementById( "updae" ).style.display = 'none';
     function openPopup() {
-    // document.getElementById("popup").style.display = "block";
-    // document.getElementById("overlay").style.display = "block";
+   
     document.getElementById( "updae" ).style.display = 'block';
   }
-
+    function getCourseDetails(optionValue){
+        console.log(optionValue);
+        <% if (typeof option !== 'undefined') { %>
+            <% for (var i = 0; i < option.length; i++) { %>
+                if ('<%= option[i].title %>' === optionValue) {
+                    var fees = '<%= option[i].fees %>';
+                    console.log(fees);
+                    var key = '<%= option[i].key %>';
+                    console.log(key);
+                    var actualLimit = '<%= option[i].actualLimit %>';
+                    console.log(actualLimit);
+                    var allortedLimit = '<%= option[i].allortedLimit %>';
+                    console.log(allortedLimit);
+                    getFees.value = fees;
+                    getKey.value = key;
+                    getActualLimit.value = actualLimit;
+                    getAllortedLimit.value = allortedLimit;
+                }
+            <% } %>
+        <% } %>
+    }
     function closePopup() {
             document.getElementById("updae").style.display = "none";
         }

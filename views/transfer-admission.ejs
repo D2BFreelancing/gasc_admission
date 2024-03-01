@@ -5,20 +5,19 @@
   <label for="uid">Search UID</label>
   <input type="text" name="uid" id="uid" class="search_box" required>
   <input type="submit" value="Search" class="search_btn">
-  
+  <%if (typeof data !='undefined' ){%>
+    <%if (data=='no data') {%>
+      <div id="popup" class="popup">
+        <!-- Popup content -->
+        <div class="popup-content">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <h1>User not Found</h1>
+        <h1><img src="/img/error.png" alt="" width="100px"></h1>
+        </div>
+      </div>
+   <% }%>
 </form>
 </div>
-<%if (typeof data !='undefined' ){%>
-  <%if (data=='no data') {%>
-    <div id="popup" class="popup">
-      <!-- Popup content -->
-      <div class="popup-content">
-      <span class="close" onclick="closePopup()">&times;</span>
-      <h1>User not Found</h1>
-      <h1><img src="/img/error.png" alt="" width="100px"></h1>
-      </div>
-    </div>
- <% }%>
 
 
 <div class="form_sec">  

@@ -106,7 +106,7 @@ body{
 }
 
 .btn{
-    margin-left: 40%;
+    margin-left: 37%;
     width: 160px;
 }
 
@@ -173,7 +173,7 @@ button:active{
     padding: 20px;
     border: 1px solid #888;
     width: 40%;
-    height:50vh;
+    height:60vh;
     border-radius: 15px; /* Could be more or less, depending on screen size */
     box-shadow: #055a2f 0px 7px 29px 0px;
 }
