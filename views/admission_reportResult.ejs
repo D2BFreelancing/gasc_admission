@@ -77,45 +77,32 @@
             <table>
                 <tr>
                     <th>Name</th>
-                    <th> PreviousDepartment</th>
-                    <th>CurrentDepartment</th>
+                    <th>Department</th>
                     <th>User Id</th>
                     <th>Token</th>
-                    <th>Old Fees</th>
                     <th>Fees</th>
-                    <th>Extra</th>
                     <th>Balance</th>
-                    <th>Paid</th>
-                    <th>Bank Report</th>
                     <!-- <th>Options</th> -->
                 </tr>
-                <% fulldata.forEach((item,index) => { %>
+                <% fulldata.forEach(item => { %>
                     <tr>
                         <% if(true){ %>
                         <td><%= item.s_name ? item.s_name : "no name" %></td>
-
-                        <td><%= item.pcname ? item.pcname : "no name" %></td>
-                        <th><%= item.cname ? item.cname : "" %></th>
+                        <td><%= item.cname ? item.cname : "no name" %></td>
                         <td><%= item.uid ? item.uid : "no name" %></td>
                         <td><%= item.token ? item.token : " " %></td>
-                        <td><%= item.old_fees ? item.old_fees :  "0" %></td>
-                        <td><%= item.fees ? item.fees : "" %></td>
-                        <td><%= item.extra ? item.extra: ""  %> </td>
+                        <td><%= item.fees ? item.fees :  "0" %></td>
                         <td><%= item.balance ? item.balance: "" %></td>
-                        <td><%= item.paid ? item.paid : "0" %></td>
-                        
                         <!-- <td><button><a href="#">view</a></button></td> -->
-                        <% } %>
-                    
-                        <td><%= bank[index] !== undefined ? bank[index] : "" %></td>
-                        
                     </tr>
-                   
+                    <% } %>
                 <% }); %>
                 <tr style="color: red;">
-                    <td colspan="10">Total</td>
-                   
-                    
+                    <td>Total</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td style="font-weight: bolder;font-family: cursive;"><%= tot %></td>
                 </tr>
                 

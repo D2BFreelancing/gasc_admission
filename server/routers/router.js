@@ -22,7 +22,7 @@ router.get('/Powered_by', rendering.Powered_by);// Powered_by Developer Shrine P
 router.post('/login', controller.login_fill);//login form 
 router.post('/signup_data',controller.signdata);//data for login find
 //new admission 
-router.get('/new_student/:id/:s_name/:token/:fees/:cname',controller.new2);//redirct the new admission page
+router.get('/new_student/:id/:s_name',controller.new2);//redirct the new admission page
 
 router.post('/form_submit',controller.dept);//
 router.get('/get-collection-count', controller.getCollectionCount);
@@ -55,15 +55,13 @@ router.post('/dept_cancel_reports',controller.dept_cancel_reports);
 router.post('/update_limit', controller.update_limit)
 
 
+router.get('/TotalReport',controller.fullcoo)
+router.post('/updateAdmin', controller.updateAdmin)
+ router.get('/exc',controller.excel)
+
 
 router.post('/date_admission_reports',controller.date_admission_reports);
 router.post('/dept_admission_reports',controller.dept_admission_report);
-router.get('/TotalReport',controller.fullcoo)
-router.post('/updateAdmin', controller.updateAdmin)
- //router.get('/exc',controller.excel)
-
-
-
 
 module.exports = router;
 
