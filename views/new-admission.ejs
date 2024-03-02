@@ -34,7 +34,7 @@
                 
                   </div>
                   <div class="form_div">
-                    <label for="feeses">Fees</label>
+                    <label for="fees">Fees</label>
                     <input type="number" id="fees" name="fees" class="rectangle-6" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;Fees" readonly>
                   </div>
                   <div class="form_div form_div_span">
@@ -51,6 +51,9 @@
             <h1>Admission Confirmed</h1>
               <p>UID: <%= uid %> </p>
               <p>Name: <%= s_name %> </p>
+              <p>Token : <%= token %></p>
+              <p>Department : <%= cname %></p>
+              <p>Fees : <%= fees %></p>
               <h2>&#127881;</h2>
             </div>
         </div>
@@ -61,6 +64,7 @@
             const mySelect = document.getElementById('mySelect');
             const feesInput = document.getElementById('fees');
             const updateDate = document.getElementById('date');
+            const availa = document.getElementById('avail')
             let originalOptions = Array.from(mySelect.options).map(option => ({ text: option.text, value: option.value }));
             const currentDate = new Date();
             const formattedDate = currentDate.toISOString().split('T')[0];

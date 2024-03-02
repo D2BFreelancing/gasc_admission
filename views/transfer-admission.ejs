@@ -40,6 +40,10 @@
                 <input type="text" id="oldcname" name="o_cname" value="<%= data ? data.cname : '' %>"  placeholder="Old Course" readonly><br>
               </div>
               <div class="form_div">
+                <label for="Acfees">Balance</label>
+                <input type="number" readonly value="<%= data ? data.balance : '' %>" placeholder=" Balance History">
+              </div>
+              <div class="form_div">
                 <div class="flex-row-c">
                   <div class="search-container">
                     <label for="New course">New&nbsp;Course</label>
@@ -59,11 +63,11 @@
               </div>
               <div class="form_div">
                 <label for="">Paid Fees</label>
-                <input type="text" id="old_fees" class="rectangle-8" readonly value="<%= data ? data.fees : '' %>">
+                <input type="number" id="old_fees" name="paid" class="rectangle-8" readonly value="<%= data ? data.paid : '' %>">
               </div>
               <div class="form_div">
                 <label for="">New Fees</label>
-                <input type="text" id="new_feess" class="rectangle-8" name="new_fees" readonly>
+                <input type="text" id="new_fees" class="rectangle-8" name="new_fees" readonly>
               </div>
               <div class="form_div">
                 <label for="">Balance Fees</label>
@@ -110,7 +114,7 @@
             document.getElementById('date').value = today;
           };
           const mySelect = document.getElementById('mySelect');
-            const feesInput = document.getElementById('new_feess')
+            const feesInput = document.getElementById('new_fees')
           const oldFeesInput = document.getElementById('old_fees');
           const balanceInput = document.getElementById('balance');
           const searchInput = document.getElementById('searchInput');
@@ -175,7 +179,7 @@
                 const cleanInput = inputValue.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
                 const match = cleanInput.match(/^(\d{2})([A-Z]{2})(\d{3})$/);
                 if (match) {
-                    return `${match[1]}-${match[2]}-${match[3]}`;
+                    return `${match[1]}${match[2]}${match[3]}`;
                 } else {
                     return inputValue;
                 }
@@ -225,9 +229,9 @@
             <% for (var i = 0; i < options.length; i++) { %>
                 if ('<%= options[i].title %>' === optionValue) {
                     console.log('<%= options[i].fees %>');
-                    var fees = '<%= options[i].fees %>';
-                    console.log(typeof(fees));
-                    feesInput.value = fees
+                    var ffrrr = '<%= options[i].fees %>';
+                    console.log(typeof(ffrrr));
+                    feesInput.value = ffrrr
                      calculateAndDisplayBalance();
                     //  // Assuming feesInput is defined elsewhere
                 }
