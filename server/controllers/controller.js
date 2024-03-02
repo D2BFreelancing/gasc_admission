@@ -5,7 +5,7 @@ const xlsx = require('xlsx');
 const fs = require('fs');
 const db = require('../database/database');
 require('../models/models')
-const {setLimit,dept_schema} = require('../models/models');
+const {dept_schema} = require('../models/models');
  const {setCourse} = require('../models/models');
 
 const login_data=require('../models/login');
@@ -20,11 +20,7 @@ console.log(mongoose.modelNames());
 //     'BA Tamil':'TL', 'BA English':'EL','B Com':'CO','B Com CA':'CC','B Com PA':'CP','B Com BI':'BI','B Com BA':'CB','B Com IT':'CI','BBA':'BA','BSC Maths':'MA','BSC Physics':'PH','BSC CS':'CS','BSC IT':'IT','BSC CT':'CT','BCA':'CA','BSC IOT':'OT','BSC CS AIDS':'AI','BSC Physical Education':'PE','MA Tamil':12,'MA English':10,'M Com':'03','MSC CS':'06','MSC IT':'09','MSC Physics':'08','MSC Chemistry':11,'MBA':13,'PGDCA':'05','CA Foundation':'CF'
 // };
 const option_val = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA','B Com PA','B Com BI','B Com BA','B Com IT','BBA','BSC Maths','BSC Physics','BSC CS','BSC IT','BSC CT','BCA','BSC IOT','BSC CS AIDS','BSC Physical Education','MA Tamil','MA English','M Com','MSC CS','MSC IT','MSC Physics','MSC Chemistry','MBA','PGDCA','CA Foundation'];
-    const MAX_DOCUMENTS_PER_COLLECTION  =  async (req,res)=>{
-        const setting = await setLimit.find();
-        console.log(setting);
-        return setting.limit;
-    }
+    
 
     exports.home=async(req,res)=>{
         res.redirect('home');
@@ -36,15 +32,7 @@ const option_val = ['Select Course','BA Tamil', 'BA English','B Com','B Com CA',
     }
 
 
-exports.update_limit = async (req,res)=>{
-    const newLimit = req.body.newLimit;
-    if (newLimit && !isNaN(newLimit)) {
-        await setLimit.findOneAndUpdate({},{limit:newLimit});
-        res.render('home');
-    } else {
-        res.status(400).send("Invalid limit provided.");
-    }
-}
+
 const saveDocument = async (document) => {
     try {
         await document.save();
@@ -69,9 +57,7 @@ exports.login_fill=async(req,res)=>{
     }
     else if (user.name === 'admin') {
         if (user.pass === pass) {
-            const setting = await setLimit.find();
-            const option = await setCourse.find()
-            console.log(setting);
+            const option = await setCourse.find();
             res.render('admin', { layout: false,option });
             return;
         } 
@@ -162,57 +148,67 @@ res.render('login',{layout:false,ch:''})
 }
 
 exports.dept = async (req, res) => {
-    console.log('hello fhewf');
+    console.log('Processing request');
+
+    // Helper function to transform input to a valid collection name
     const transformInputToCollectionName = (input) => {
         return input.toLowerCase().replace(/\s+/g, '_');
     };
+
+    // Helper function to get the last two digits of the current year
+    const getCurrentYearLastTwoDigits = () => {
+        return new Date().getFullYear().toString().slice(-2);
+    };
+
     const currentYearLastTwoDigits = getCurrentYearLastTwoDigits();
-    
     const searchName = req.body.cname;
-    
     const collectionName = transformInputToCollectionName(searchName);
 
-    // Dynamically access or define a collection based on the collectionName
-    const CollectionModel = mongoose.model(collectionName,dept_schema);
+    // Dynamically define a collection based on the collectionName
+    const CollectionModel = mongoose.model(collectionName, dept_schema);
 
     try {
         // Check the current count of documents in the collection
         const currentDocumentCount = await CollectionModel.countDocuments();
-        if (currentDocumentCount >= MAX_DOCUMENTS_PER_COLLECTION()) {
-            // If the limit is reached, prevent adding a new document and inform the user
-            return res.status(400).send(`The limit of ${MAX_DOCUMENTS_PER_COLLECTION()} documents has been reached for the ${searchName} collection.`);
+        const result = await setCourse.findOne({ title: searchName }, { key: 1, _id: false, allortedLimit: 1 });
+
+        // If no matching document (course) is found
+        if (!result) {
+            return res.status(404).send('Course not found');
         }
 
-        var total = currentDocumentCount + 1;
-        const result = await setCourse.find({ title: searchName }, { key: 1, _id: false })
-        var middlePart = result[0].key;
-        console.log(middlePart);
-        // const middlePart = uidMiddleMapping[searchName];
-        console.log('middlepart',middlePart);
-        var uid = `${currentYearLastTwoDigits}-${middlePart}-${total.toString().padStart(3, '0')}`;
+        var middlePart = result.key;
+        var uid = `${currentYearLastTwoDigits}-${middlePart}-${(currentDocumentCount + 1).toString().padStart(3, '0')}`;
 
-        // Assuming you have the rest of your document fields ready to be saved
+        // Check if the current document count exceeds or equals the allotted limit
+        if (currentDocumentCount >= result.allortedLimit) {
+            return res.send('Admission Full');
+        }
+
+        // Proceed with creating and saving the new document
         const newDocumentData = {
             date: req.body.date,
             cname: req.body.cname,
-            token: total,
+            token: currentDocumentCount + 1,
             s_name: req.body.s_name,
-            uid:uid,
+            uid: uid,
             fees: req.body.fees,
-            in_dept:true,
-            balance:req.body.balance,
-            cancel:false
+            in_dept: true,
+            balance: req.body.balance,
+            cancel: false
         };
-        const newDocument = new CollectionModel(newDocumentData);
 
-        await saveDocument(newDocument);
-        // After successful insertion, you can redirect or respond as needed
+        const newDocument = new CollectionModel(newDocumentData);
+        await newDocument.save(); // Use the save method directly on the document instance
+
+        // After successful insertion, redirect or respond as necessary
         res.redirect(`/new_student/${uid}/${req.body.s_name}`);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error saving data');
     }
 };
+
 
 async function sound(col) {
     var value = col;
@@ -293,9 +289,18 @@ exports.transfer_admission = async (req, res) => {
     }
 
     try {
+        const currentDocumentCount = await destCourse.countDocuments();
+        const result = await setCourse.findOne({ title: searchName }, { key: 1, _id: false, allortedLimit: 1 });
+
+        // If no matching document (course) is found
+        if (!result) {
+            return res.status(404).send('Course not found');
+        }
         // await transferStudent(uid, sourceCourse, destCourse);
         await sourceCourse.updateOne({"uid":uid,"in_dept":true},{$set:{"in_dept":false}})
-
+        if (currentDocumentCount >= result.allortedLimit) {
+            return res.send('Admission Full');
+        }
         const newDocument = new model({
             date: req.body.date,
             cname: req.body.cname,

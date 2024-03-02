@@ -38,11 +38,7 @@ const dept_schema = new mongoose.Schema({
     }
 });
 
-const limitSchema = new Schema({
-    limit:{
-        typeof:Number
-    }
-});
+
 
 const courseSchema =new Schema({
 
@@ -95,7 +91,7 @@ const courseSchema =new Schema({
 // const pgdca = mongoose.model('pgdca',dept_schema);
 // const ca_foundation = mongoose.model('ca_foundation',dept_schema);
 
-const setLimit = mongoose.model('limit',limitSchema);
+
 const setCourse = mongoose.model('Course',courseSchema);
 
 
@@ -128,5 +124,4 @@ const setCourse = mongoose.model('Course',courseSchema);
 
 
 exports.setCourse=setCourse;
-exports.setLimit=setLimit;
 exports.dept_schema=dept_schema;
