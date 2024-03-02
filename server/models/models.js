@@ -7,8 +7,15 @@ const dept_schema = new mongoose.Schema({
         type:Date,
         require:true
     },
+    trans_date: {
+        type:Date   
+    },
     cname:{
         type:String,
+        require:true,
+    },
+    pcname: {
+        type: String,
         require:true,
     },
     token:{
@@ -31,11 +38,16 @@ const dept_schema = new mongoose.Schema({
         type: Number,
       default: 0  
     },
+   
     in_dept:{
         type:Boolean,
     },
     balance:{
         type:Number,
+    },
+    old_fees: {
+      type:Number,
+      default:0
     },
     extra: {
       type:Number  
