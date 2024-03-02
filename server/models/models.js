@@ -7,15 +7,8 @@ const dept_schema = new mongoose.Schema({
         type:Date,
         require:true
     },
-    trans_date: {
-        type:Date   
-    },
     cname:{
         type:String,
-        require:true,
-    },
-    pcname: {
-        type: String,
         require:true,
     },
     token:{
@@ -38,16 +31,11 @@ const dept_schema = new mongoose.Schema({
         type: Number,
       default: 0  
     },
-   
     in_dept:{
         type:Boolean,
     },
     balance:{
         type:Number,
-    },
-    old_fees: {
-      type:Number,
-      default:0
     },
     extra: {
       type:Number  
@@ -61,12 +49,6 @@ const dept_schema = new mongoose.Schema({
 });
 
 
-// const newLocal = new Schema({
-//     limit: {
-//         typeof: Number
-//     }
-// });
-// const limitSchema = newLocal;
 
 const courseSchema =new Schema({
 

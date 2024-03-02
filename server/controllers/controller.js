@@ -13,9 +13,6 @@ const mongoose = require('mongoose');
 
 console.log(mongoose.modelNames());
 
-const transformInputToCollectionName = (input) => {
-    return input.toLowerCase().replace(/\s+/g, '_');
-};
 // const feesMapping = {
 //     'BA Tamil':11400, 'BA English':12400,'B Com':17400,'B Com CA':17400,'B Com PA':17400,'B Com BI':16400,'B Com BA':16400,'B Com IT':17400,'BBA':15400,'BSC Maths':12400,'BSC Physics':12400,'BSC CS':19400,'BSC IT':19400,'BSC CT':17400,'BCA':19400,'BSC IOT':17400,'BSC CS AIDS':17400,'BSC Physical Education':13400,'MA Tamil':12950,'MA English':12950,'M Com':12950,'MSC CS':12950,'MSC IT':12950,'MSC Physics':14950,'MSC Chemistry':15950,'MBA':28950,'PGDCA':6050,
 // };
@@ -83,18 +80,13 @@ res.render('login',{layout:false,ch:''})
  
    
 
-exports.new2 = async (req, res) => {
-    const fitchdata = await setCourse.find({});
-    console.log(fitchdata);
-   
-    var uid = req.params.id;
-    var s_name = req.params.s_name;
-    var token = req.params.token;
-    var fees = req.params.fees;
-    var cname = req.params.cname;
-
-    console.log("sound" ,req.params);
-     res.render('new-admission', { uid,s_name,token,fees,cname,fitchdata});
+ exports.new2 = async(req,res)=>{
+    const fitchdata= await setCourse.find({});
+   console.log(fitchdata);  
+    var uid=req.params.id;
+    var s_name=req.params.s_name;
+    console.log("sound"+req.params);
+     res.render('new-admission', { uid,s_name,fitchdata});
   }
  
 
@@ -170,7 +162,6 @@ exports.dept = async (req, res) => {
         // Proceed with creating and saving the new document
         const newDocumentData = {
             date: req.body.date,
-            trans_date:null,
             cname: req.body.cname,
             pcname:req.body.cname,
             token: currentDocumentCount + 1,
@@ -218,19 +209,14 @@ async function sound(col) {
 };
 
 exports.get_uid = async(req,res)=>{
-    const fetch = req.body.uid;
-    console.log(fetch);
+    const fetch=req.body.uid;
+    console.log('ehjfhr'+ fetch);
     var found=false;
-    const fitchdata = await setCourse.find({});
-    console.log(fitchdata);
-
-   //console.log(fitchdata);  
-    const models = mongoose.modelNames();
-    console.log(models);
-    for (var dept of fitchdata) {
-        var dept_name = transformInputToCollectionName(dept['title']);
-    var dept_model = mongoose.model(dept_name,dept_schema);
-    console.log(dept);
+    const fitchdata= await setCourse.find({});
+   console.log(fitchdata);  
+   const models=mongoose.modelNames();
+for(var dept of models){
+    var dept_model=mongoose.model(dept);
     if (found) {
         break;
     }
@@ -261,13 +247,11 @@ exports.transfer_admission = async (req, res) => {
         return input.toLowerCase().replace(/\s+/g, '_');
     };
 
-    var extra = 0;
+    let extra = 0;
     let balance = 0;
     const uid = req.body.uid;
     const sourceCourseName = req.body.o_cname;
     const destCourseName = req.body.cname; 
-    var paid = parseFloat(req.body.paid);
-    console.log(paid);
     const ver = parseFloat(req.body.balance); // Assuming balance is a number
     console.log(ver);
 
@@ -278,9 +262,7 @@ exports.transfer_admission = async (req, res) => {
         balance = ver;
         console.log('put in balance');
     }
-    var old_fees = paid;
-    paid+=extra
-    
+
     const sourceCourse = mongoose.model(transformInputToCollectionName(sourceCourseName), dept_schema);
     const destCourse = mongoose.model(transformInputToCollectionName(destCourseName), dept_schema);
 
@@ -348,10 +330,8 @@ exports.transfer_admission = async (req, res) => {
             cancel: false,
             transfered: true,
             balance: balance,
-            old_fees:old_fees,
             extra: extra
         });
-        console.log(newDocument);
 
         await saveDocument(newDocument);
         sound(collectionName);
@@ -446,33 +426,24 @@ exports.report_date= async (req,res) =>{
        // if()
     }
     var feee = fulldata.map(obj => obj.fees);
-    var pai = fulldata.map(obj=> obj.paid)
 var bal = fulldata.map(obj => obj.extra);
 var trr = fulldata.map(obj => obj.transfered);
 var tot = 0; // Initialize the total variable
 
     console.log('dbebhef', trr);
-    console.log('gerjgenr', bal);
-    console.log('paa', pai);
-    var bank = [];
+    console.log('gerjgenr',bal);
 
 for (let i = 0; i < feee.length; i++) {
     if (trr[i] === true) {
         if (bal[i]) {
             tot += parseInt(bal[i]);
-        bank.push(parseInt(bal[i]))
         }
         else {
-            bank.push(0)
+            tot += parseInt(feee[i]);
         }
-       
-    }
-    else {
-        tot += parseInt(feee[i]);
-        bank.push(parseInt(feee[i]))
     }
 }
-console.log(bank);
+
 console.log(tot);
     // for (feess in feee) {
     //     if (bal[feess]){
@@ -489,7 +460,7 @@ console.log(tot);
     //console.log('Total fees:', tot);
     
             const fitchdata= await setCourse.find({});
-            res.render('admission_reportResult', { fitchdata,fulldata,date,tot,bank});
+            res.render('admission_reportResult', { fitchdata,fulldata,date,tot});
         
         }
 
@@ -739,6 +710,39 @@ exports.updateAdmin = async (req, res) => {
     
 }
 
+// Converting data into Excel sheet
+
+
+const excelFileName = 'Admission.xlsx';
+
+// Create a new workbook
+const workbook = xlsx.utils.book_new();
+
+var coo = 4;
+exports.excel = async (req, res) => {
+    var ddd = 0;
+    var daa = [];
+    const darrs = await setCourse.find({}, { title: 1, _id: 0 });
+    
+    // Extract titles from the array of objects
+    const titles = darrs.map(item => item.title);
+    
+    console.log(titles);
+    
+    const transformInputToCollectionName = (input) => {
+        return input.toLowerCase().replace(/\s+/g, '_')
+    };
+    const transformedTitles = titles.map(transformInputToCollectionName);
+console.log(transformedTitles);
+   
+    for (let title of titles) {
+        const collectionName = transformInputToCollectionName(title);
+        // Access the collection dynamically and retrieve all data
+        const collectionData = await mongoose.model(collectionName, dept_schema).find({ cancel: false })
+        console.log(`Data for collection "${collectionName}":`, collectionData);
+        daa.push(...collectionData)
+        console.log(daa);
+        const worksheet = xlsx.utils.json_to_sheet(daa)
 
 exports.date_admission_reports = async(req,res)=>{
     const date = req.body.date;
@@ -756,8 +760,8 @@ exports.date_admission_reports = async(req,res)=>{
         console.log(fullDate);
 
     }
-    res.render('date_cancel',{fullDate:fullDate,date:date})
-  //  res.render('date-cancel')
+    res.render('date_cancel',{fullDate,date})
+
 }
 exports.dept_admission_report = async (req, res) => {
     try {
@@ -803,23 +807,23 @@ exports.dept_admission_report = async (req, res) => {
 };
 
 
-        // xlsx.utils.book_append_sheet(workbook, worksheet, coo);
-        // coo = coo + 1;
-        // console.log('cccc',coo);
+        xlsx.utils.book_append_sheet(workbook, worksheet, coo);
+        coo = coo + 1;
+        console.log('cccc',coo);
 
-        // // Write workbook to a file
-        // xlsx.writeFile(workbook, excelFileName, { bookType: 'xlsx', type: 'file' });
+        // Write workbook to a file
+        xlsx.writeFile(workbook, excelFileName, { bookType: 'xlsx', type: 'file' });
 
-        // console.log(`Data exported to ${excelFileName}`);
-        // // ddd = collectionData+ddd
-        // //     console.log(typeof(ddd));
-    
+        console.log(`Data exported to ${excelFileName}`);
+        // ddd = collectionData+ddd
+        //     console.log(typeof(ddd));
+    }
   // console.log(ddd);
 
     // File Name for Excel
 
 
-
+}
 
 
 
@@ -854,39 +858,3 @@ exports.fullcoo = async (req, res) => {
 }
 
 
-
-// // Converting data into Excel sheet
-
-
-// const excelFileName = 'Admission.xlsx';
-
-// // Create a new workbook
-// const workbook = xlsx.utils.book_new();
-
-// var coo = 4;
-// exports.excel = async (req, res) => {
-//     var ddd = 0;
-//     var daa = [];
-//     const darrs = await setCourse.find({}, { title: 1, _id: 0 });
-    
-//     // Extract titles from the array of objects
-//     const titles = darrs.map(item => item.title);
-    
-//     console.log(titles);
-    
-//     const transformInputToCollectionName = (input) => {
-//         return input.toLowerCase().replace(/\s+/g, '_')
-//     };
-//     const transformedTitles = titles.map(transformInputToCollectionName);
-//     console.log(transformedTitles);
-   
-//     for (let title of titles) {
-//         const collectionName = transformInputToCollectionName(title);
-//         // Access the collection dynamically and retrieve all data
-//         const collectionData = await mongoose.model(collectionName, dept_schema).find({ cancel: false })
-//         console.log(`Data for collection "${collectionName}":`, collectionData);
-//         daa.push(...collectionData)
-//         console.log(daa);
-//         const worksheet = xlsx.utils.json_to_sheet(daa)
-//     }
-// }
