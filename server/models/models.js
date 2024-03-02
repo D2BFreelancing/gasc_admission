@@ -60,12 +60,7 @@ const dept_schema = new mongoose.Schema({
     }
 });
 
-// const newLocal = new Schema({
-//     limit: {
-//         typeof: Number
-//     }
-// });
-// const limitSchema = newLocal;
+
 
 const courseSchema =new Schema({
 
